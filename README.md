@@ -1,1 +1,3 @@
-# DSCI-532_2026_group_20_non_market_housing
+# Non-market Housing Dashboard
+
+This dashboard displays information regarding non-market housing projects in Vancouver. Non-market housing is often subsidized and intended for low and moderate income singles and families. In Vancouver, it exists in the forms of social, supportive, and co-op housing. The dashboard tracks information such as project status, location, clientele, and design in order to provide an view of the current state of non-market housing in the city. 
