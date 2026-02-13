@@ -19,7 +19,7 @@ These stakeholders require clear, spatially informed, and demographic-specific i
 
 ## Research Questions
 
-Our dashboard will asist our stakeholders in addressing research questions related to equity in the following areas:
+Our dashboard will asist our stakeholders in addressing research questions related to equity and developmental trends:
 
 1. Spatial Equity
     - Which local areas in Vacnouver have the lowest concentration of non-market housing developments?
@@ -30,12 +30,10 @@ Our dashboard will asist our stakeholders in addressing research questions relat
 3. Equitable Accessibility
     - How many units are accessible or adaptable for residents with disabilities?
     - Which local areas lack accessible developments?
-
-Furthermore, our dashboard will allow our stakeholders to examine developmental trends:
-
-1. How has the rate of non-market housing development changed over time?
-2. Which organizations (operators) contribute to the most projects?
-3. Do certain organizations prioritize different clientele (family, senior, disabled, etc.)?
+4. Developmental Trends
+    - How has the rate of non-market housing development changed over time?
+    - Which organizations (operators) contribute to the most projects?
+    - Do certain organizations prioritize different clientele (family, senior, disabled, etc.)?
 
 ## Description of the Data
 
