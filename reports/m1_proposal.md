@@ -79,7 +79,7 @@ We also plan on integrating the [City of Vancouver's Local Area Boundary Dataset
 | `Geom` | Spatial representation of local area boundary. | Used to determine which local area each development falls within. |
 | `geo_point_2d` | Spatial coordinate representing the center of the local area. | Will not be relevent to our dashboard. |
 
-## Persona and Usage Scenario
+## Usage Scenarios
 
 ### Persona
 
