@@ -1,6 +1,7 @@
 from shiny import App, ui
 
-app_ui = ui.page_fillable(
+app_ui = ui.page_sidebar(
+    ui.sidebar("Tabs/Views", bg="#f8f8f8"),
     ui.layout_columns(
         ui.layout_columns(
             ui.card("Chart/Metrics"),
@@ -22,6 +23,7 @@ app_ui = ui.page_fillable(
         col_widths=(12, 12),
         row_heights=(1, 3),
     ),
+    fillable=True,
 )
 
 
