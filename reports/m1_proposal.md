@@ -116,3 +116,14 @@ Detail how the audience will interact with the app.
 3. Equitable Accessibility Analysis
     - **User Story**: A member of a non-profit housing provider for people with disabilites wants to view accessible and adaptable unit counts in different neighbourhoods so they can determine where to propose a new development.
     - **JTBD**: When assessing equity goals, they want to quickly visualize accessible units by area and over time so they can identify gaps in inclusive design.
+## App Sketch and Description
+
+<img src="../img/sketch.png" alt="App Sketch" width="600">
+
+The initial version of the dashboard will feature an interactive map of Vancouver displaying all non-market housing developments as point markers. Users will be able to filter the displayed projects by occupancy year, clientele type, design category, operator, project status, and neighbourhood. Hovering over a specific property on the map will reveal a detail card showing the project's name, address, and other key attributes.
+
+Alongside the map, the dashboard will include a set of supporting charts and summary metrics to provide broader context:
+
+- **Bar charts** summarizing the distribution of units by clientele type (families, seniors, other), design category (accessible, adaptable, standard) and area.
+- A **line chart** showing the count of projects by occupancy year to illustrate development trends over time.
+- **Summary cards** displaying the current count of proposed, approved, and under-construction projects.
