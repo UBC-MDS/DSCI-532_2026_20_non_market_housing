@@ -116,6 +116,21 @@ Detail how the audience will interact with the app.
 3. Equitable Accessibility Analysis
     - **User Story**: A member of a non-profit housing provider for people with disabilites wants to view accessible and adaptable unit counts in different neighbourhoods so they can determine where to propose a new development.
     - **JTBD**: When assessing equity goals, they want to quickly visualize accessible units by area and over time so they can identify gaps in inclusive design.
+
+## Exploratory Data Analysis
+
+The following visuals support the second user story of demographic equity analysis.
+
+<img src="../img/clientele_counts.png" alt="Count of Units by Clientele" width="600">
+
+This visualization shows the total count of units for each type of clientele. Comparing these values can help the policy analyst determine the current distribution of target clientele in non-market housing and can help them decide whether there is a specific clientele that they should focus on for future projects.
+
+<img src="../img/family_by_neighbourhood.png" alt="Count of Family Units by Neighbourhood" width="600">
+
+This visualization shows the total count of family units for each local area in Vancouver. Comparing these values can help the policy analyst determine the density of non-market housing in each neighbourhood, which can help them decide the location of any future projects.
+
+The complete exploratory data analysis can be viewed in the [EDA analysis notebook](https://github.com/UBC-MDS/DSCI-532_2026_20_non_market_housing/blob/main/notebooks/eda_analysis.ipynb).
+
 ## App Sketch and Description
 
 <img src="../img/sketch.png" alt="App Sketch" width="600">
