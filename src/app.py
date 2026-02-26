@@ -7,7 +7,7 @@ clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
     dtype={"Occupancy Year": "Int64"}
     )
-
+local_areas = sorted(clean_df["Local Area"].unique().tolist())
 status_choices = {
                     "Proposed": "Proposed",
                     "Approved": "Approved",
@@ -23,6 +23,13 @@ app_ui = ui.page_sidebar(
                 choices=status_choices,
                 selected=[]
         ),
+        ui.input_selectize(
+            "selectize",
+            "Local Area:",
+            local_areas,
+            multiple=True,
+        ),
+        title=
         ui.input_slider(
                 id="input_year",
                 label="Occupancy Year",
@@ -30,7 +37,9 @@ app_ui = ui.page_sidebar(
                 max=clean_df["Occupancy Year"].max(),
                 value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
                 sep=""
-        )
+            ),
+       
+        bg="#f8f8f8",
     ),
     ui.layout_columns(
         ui.layout_columns(
