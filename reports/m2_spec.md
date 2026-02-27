@@ -14,7 +14,7 @@
 |---------------|---------------|---------------|---------------|---------------|
 | `input_local_area` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
 | `input_operator` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
-| `input_status` | Input | `ui.input_checkbox` | \- | 1, 2, 3 |
+| `input_status` | Input | `ui.input_checkbox_group` | \- | 1, 2, 3 |
 | `input_year` | Input | `ui.input_slider` | \- | 1, 2, 3 |
 | `filtered_df` | Reactive Calc | `@reactive.calc` | `input_local_area`, `input_operator`, `input_project_status`, `input_year` | 1, 2, 3 |
 | `filtered_map` | Output | `@render_widget` | `filtered_df` | 1 |

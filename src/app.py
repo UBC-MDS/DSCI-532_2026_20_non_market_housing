@@ -8,8 +8,21 @@ clean_df = pd.read_csv(
     dtype={"Occupancy Year": "Int64"}
     )
 
+status_choices = {
+                    "Proposed": "Proposed",
+                    "Approved": "Approved",
+                    "Under Construction": "Under Construction",
+                    "Completed": "Completed"
+                }
+
 app_ui = ui.page_sidebar(
     ui.sidebar(
+        ui.input_checkbox_group(
+                id="input_status",
+                label="Project Status",
+                choices=status_choices,
+                selected=[]
+        ),
         ui.input_slider(
                 id="input_year",
                 label="Occupancy Year",
@@ -17,8 +30,8 @@ app_ui = ui.page_sidebar(
                 max=clean_df["Occupancy Year"].max(),
                 value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
                 sep=""
-            ),
-        bg="#f8f8f8"),
+        )
+    ),
     ui.layout_columns(
         ui.layout_columns(
             ui.layout_columns(
@@ -39,6 +52,7 @@ app_ui = ui.page_sidebar(
         row_heights=(2, 3),
     ),
     fillable=True,
+    theme=ui.Theme("lux")
 )
 
 
@@ -50,6 +64,8 @@ def server(input, output, session):
         operator = input.input_operator()
         year_min, year_max = input.input_year()
         status = input.input_status()
+        if not status:
+            status = list(status_choices.keys())
 
         return clean_df.query(
             "`Local Area` in @local_area & "
@@ -58,7 +74,7 @@ def server(input, output, session):
             "`Occupancy Year` <= @year_max & "
             "`Project Status` in @status"
         )
-
+    
     @render_widget
     def map():
         return Map(
