@@ -1,4 +1,4 @@
-from ipyleaflet import Map, Marker
+from ipyleaflet import Map, Marker, LayerGroup
 from shiny import App, ui, reactive, render
 from shinywidgets import output_widget, render_widget
 import pandas as pd
@@ -82,24 +82,19 @@ def server(input, output, session):
 
     @render_widget
     def map():
-        m = Map(center=(49.25, -123.12), zoom=12, scroll_wheel_zoom=True)
         df = filtered_df()
-        df = df.dropna(subset=['Geom'])
+        m = Map(center=(49.25, -123.12), zoom=12, scroll_wheel_zoom=True)
         
-        if not df.empty:
-            for _, row in df.iterrows():
-                geom = row['Geom']
-                
-                marker = Marker(location=(geom.y, geom.x), draggable=False)
-
-                marker.popup = HTML(f"""
-                            <b>{row.get('Name', 'N/A')}</b><br>
-                            <b>Address</b>: {row.get('Address', '')}<br>
-                            <b>URL</b>: <a href="{row.get('URL', '')}" target="_blank">{row.get('URL', '')}</a>
-                            """)
-                
-                m.add_layer(marker)
-                    
+        for _, row in df.dropna(subset=['Geom']).iterrows():
+            geom = row['Geom']
+            marker = Marker(location=(geom.y, geom.x), draggable=False)
+            marker.popup = HTML(f"""
+                <b>{row.get('Name', 'N/A')}</b><br>
+                <b>Address</b>: {row.get('Address', '')}<br>
+                <b>URL</b>: <a href="{row.get('URL', '')}" target="_blank">{row.get('URL', '')}</a>
+            """)
+            m.add_layer(marker)
+        
         return m
 
 app = App(app_ui, server=server)
