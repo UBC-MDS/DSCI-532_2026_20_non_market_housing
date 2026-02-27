@@ -84,6 +84,11 @@ def server(input, output, session):
         operator = input.input_operator()
         year_min, year_max = input.input_year()
         status = input.input_status()
+
+        if not local_area:
+            local_area = local_areas
+        if not operator:
+            operator = list(operator_choices.keys())
         if not status:
             status = list(status_choices.keys())
 
