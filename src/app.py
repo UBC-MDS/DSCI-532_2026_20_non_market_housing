@@ -17,6 +17,12 @@ status_choices = {
 
 app_ui = ui.page_sidebar(
     ui.sidebar(
+        ui.input_selectize(
+            id="input_local_area",
+            label="Local Area",
+            choices=local_areas,
+            multiple=True,
+        ),
         ui.input_checkbox_group(
                 id="input_status",
                 label="Project Status",
@@ -31,12 +37,6 @@ app_ui = ui.page_sidebar(
                 value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
                 sep=""
             ),
-        ui.input_selectize(
-            id="input_local_area",
-            label="Local Area",
-            choices=local_areas,
-            multiple=True,
-        ),
         title="Filters",
         bg="#f8f8f8",
     ),
