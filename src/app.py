@@ -81,7 +81,7 @@ def server(input, output, session):
     @reactive.calc
     def filtered_df():
         local_area = input.input_local_area()
-        #operator = input.input_operator()
+        operator = input.input_operator()
         year_min, year_max = input.input_year()
         status = input.input_status()
         if not status:
@@ -89,7 +89,7 @@ def server(input, output, session):
 
         return clean_df.query(
             "`Local Area` in @local_area & "
-            #"`Operator` in @operator & "
+            "`Operator` in @operator & "
             "`Occupancy Year` >= @year_min & "
             "`Occupancy Year` <= @year_max & "
             "`Project Status` in @status"
