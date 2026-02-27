@@ -14,6 +14,7 @@ status_choices = {
                     "Under Construction": "Under Construction",
                     "Completed": "Completed"
                 }
+operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())}
 
 app_ui = ui.page_sidebar(
     ui.sidebar(
@@ -28,6 +29,12 @@ app_ui = ui.page_sidebar(
                 label="Project Status",
                 choices=status_choices,
                 selected=[]
+        ),
+        ui.input_selectize(
+            "input_operator",
+            "Operator",
+            operator_choices,
+            multiple=True
         ),
         ui.input_slider(
                 id="input_year",
