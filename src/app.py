@@ -52,11 +52,11 @@ app_ui = ui.page_sidebar(
         ui.layout_columns(
             ui.layout_columns(
                 ui.card("Total count"),
-                ui.card("Clientele Bar Chart"),
+                ui.card(output_widget("clientele_bar")),
                 col_widths=(12, 12),
                 row_heights=(1, 2),
             ),
-            ui.card("Occupancy Year Line Chart"),
+            ui.card(output_widget("occupancy_line")),
             ui.card("Design Pie Chart"),
             col_widths=(4, 5, 3),
         ),
