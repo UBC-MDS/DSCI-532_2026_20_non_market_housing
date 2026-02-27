@@ -3,7 +3,7 @@
 ## Updated Job Stories
 
 | \# | Job Story | Status | Notes |
-| ---------------: | --------------------- | ---------------- | -------------------- |
+|---------------:|---------------------|----------------|--------------------|
 | 1 | When I am a city housing planner doing a quick scan of non-market housing coverage, I want to narrow developments by local area, operator, and project status, so I can clearly see which projects fall into my selected scope and confirm the total number of developments included in that selection for planning and funding discussions. | 🔄 Revised | Updates the old spatial story from “projects and units per local area” to the implemented workflow: filtering and confirming the total selected developments for the chosen subset. |
 | 2 | When I am a policy analyst preparing a progress update, I want to look at changes in housing delivery across occupancy years while applying the same filters (local area, operator, project status), so I can compare delivery patterns between neighbourhoods and project stages and identify periods where delivery accelerates or slows down. | 🔄 Revised | Adds an explicit time-based delivery view that was not captured in the old stories. Shifts from a static neighbourhood comparison to a trend-focused analysis that still supports equity questions. |
 | 3 | When I am a non-profit housing provider advocating for inclusive and needs-aligned housing, I want to examine accessibility coverage and the clientele mix for any filtered subset (local area, operator, project status), so I can identify gaps (e.g., low accessible/adaptable supply or limited seniors/family focus) and justify where a new proposal or partnership should be prioritized. | 🔄 Revised | Merges the old demographic and accessibility stories into one equity decision workflow. |
@@ -11,7 +11,7 @@
 ## Component Inventory
 
 | ID | Type | Shiny widget / renderer | Depends on | Job story |
-| --------------- | --------------- | --------------- | --------------- | --------------- |
+|---------------|---------------|---------------|---------------|---------------|
 | `input_local_area` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
 | `input_operator` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
 | `input_status` | Input | `ui.input_checkbox` | \- | 1, 2, 3 |
@@ -57,22 +57,17 @@ def filter_data():
 
 The `@reactive.calc` `filtered_df` depends on the following inputs:
 
-- `input_local_area`
-- `input_operator`
-- `input_year`
-- `input_status`
+-   `input_local_area`
+-   `input_operator`
+-   `input_year`
+-   `input_status`
 
 It filters rows in the dataframe to the selected local area, operator, year of occupancy, and status.
 
 It is consumed by the following outputs:
 
-- `filtered_map`
-- `clientele_bar_chart`
-- `occupancy_year_line_chart`
-- `count_total_filtered`
-- `design_pie_chart`
-- `filtered_map`
-- `clientele_bar_chart`
-- `occupancy_year_line_chart`
-- `count_total_filtered`
-- `design_pie_chart`
+-   `filtered_map`
+-   `clientele_bar_chart`
+-   `occupancy_year_line_chart`
+-   `count_total_filtered`
+-   `design_pie_chart`
