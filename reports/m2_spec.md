@@ -34,12 +34,18 @@ flowchart TD
 `filtered_df` is a `@reactive.calc` that calls the following function:
 
 ```python
-def filter_data():
+def filtered_df():
+    local_area = input.input_local_area()
+    operator = input.input_operator()
+    year_min, year_max = input.input_year()
+    status = input.input_status()
+
     return clean_df.query(
-        "`Local Area` in input.input_local_area() & "
-        "Operator in input.input_operator() & "
-        "`Occupancy Year` in input.input_year() & "
-        "`Project Status` in input.input_status() & "
+        "`Local Area` in @local_area & "
+        "`Operator` in @operator & "
+        "`Occupancy Year` >= @year_min & "
+        "`Occupancy Year` <= @year_max & "
+        "`Project Status` in @status"
     )
 ```
 
