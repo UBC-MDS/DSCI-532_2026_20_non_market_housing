@@ -52,7 +52,7 @@ app_ui = ui.page_sidebar(
         ui.layout_columns(
             ui.layout_columns(
                 ui.card("Total count"),
-                ui.card(output_widget("clientele_bar")),
+                ui.card("Clientele Bar Chart")
                 col_widths=(12, 12),
                 row_heights=(1, 2),
             ),
@@ -100,5 +100,30 @@ def server(input, output, session):
             scroll_wheel_zoom=True,
         )
 
+    @render_widget
+    def occupancy_line():
+        d = filtered_df().dropna(subset=["Occupancy Year"]).copy()
 
+        yearly = (
+            d.groupby("Occupancy Year", as_index=False)
+            .size()
+            .rename(columns={"size": "Developments"})
+            .sort_values("Occupancy Year")
+        )
+
+        chart = (
+            alt.Chart(yearly)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("Occupancy Year:Q", title="Occupancy year"),
+                y=alt.Y("Developments:Q", title="Number of developments"),
+                tooltip=[
+                    alt.Tooltip("Occupancy Year:Q", format=".0f"),
+                    alt.Tooltip("Developments:Q", format=","),
+                ],
+            )
+            .properties(title="Developments by occupancy year", height=220)
+        )
+        return chart
+    
 app = App(app_ui, server=server)
