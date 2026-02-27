@@ -45,7 +45,7 @@ app_ui = ui.page_sidebar(
 def server(input, output, session):
 
     @reactive.calc
-    def filter_data():
+    def filtered_df():
         local_area = input.input_local_area()
         operator = input.input_operator()
         year_min, year_max = input.input_year()
