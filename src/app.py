@@ -1,9 +1,11 @@
 from ipyleaflet import Map, Marker, LayerGroup
 from shiny import App, ui, reactive, render
-from shinywidgets import output_widget, render_widget
+from shinywidgets import output_widget, render_widget, render_altair
 import pandas as pd
 from shapely import wkt
 from ipywidgets import HTML
+
+from charts.accessibility_pie import create_accessibility_pie_chart
 
 clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
@@ -52,16 +54,53 @@ app_ui = ui.page_sidebar(
         title="Filters",
         bg="#f8f8f8",
     ),
+    ui.tags.style("""
+    .accessibility-card,
+    .accessibility-card .card-body,
+    .accessibility-card .html-fill-item {
+        overflow: hidden !important;
+    }
+
+    .accessibility-card .card-body {
+        display: flex;
+        justify-content: center;
+        padding: 1rem 0.75rem 0.5rem 0.75rem;
+    }
+
+    .accessibility-chart-wrap {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    #accessibility_pie_chart,
+    #accessibility_pie_chart .vega-embed {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    """),
     ui.layout_columns(
         ui.layout_columns(
             ui.layout_columns(
                 ui.card("Total count"),
-                ui.card("Clientele Bar Chart"),
+                ui.card("Clientele Bar Chart", style="overflow: hidden;"),
                 col_widths=(12, 12),
                 row_heights=(1, 2),
             ),
             ui.card("Occupancy Year Line Chart"),
-            ui.card("Design Pie Chart"),
+            ui.card(
+                ui.div(
+                    output_widget(
+                        "accessibility_pie_chart",
+                        width="100%",
+                        height="100%",
+                        fill=True,
+                    ),
+                    class_="accessibility-chart-wrap",
+                ),
+                class_="accessibility-card",
+            ),
             col_widths=(4, 5, 3),
         ),
         ui.layout_columns(
@@ -91,6 +130,10 @@ def server(input, output, session):
             operator = list(operator_choices.keys())
         if not status:
             status = list(status_choices.keys())
+        if not local_area:
+            local_area = local_areas
+        if not operator:
+            operator = list(operator_choices.keys())
 
         return clean_df.query(
             "`Local Area` in @local_area & "
@@ -116,5 +159,9 @@ def server(input, output, session):
             m.add_layer(marker)
         
         return m
+    @render_altair(width="100%", height="100%", fill=True)
+    def accessibility_pie_chart():
+        return create_accessibility_pie_chart(filtered_df())
+
 
 app = App(app_ui, server=server)
