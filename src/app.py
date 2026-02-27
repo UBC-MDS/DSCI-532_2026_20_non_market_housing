@@ -7,7 +7,7 @@ clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
     dtype={"Occupancy Year": "Int64"}
     )
-
+local_areas = sorted(clean_df["Local Area"].unique().tolist())
 status_choices = {
                     "Proposed": "Proposed",
                     "Approved": "Approved",
@@ -18,6 +18,12 @@ operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())
 
 app_ui = ui.page_sidebar(
     ui.sidebar(
+        ui.input_selectize(
+            id="input_local_area",
+            label="Local Area",
+            choices=local_areas,
+            multiple=True,
+        ),
         ui.input_checkbox_group(
                 id="input_status",
                 label="Project Status",
@@ -37,7 +43,9 @@ app_ui = ui.page_sidebar(
                 max=clean_df["Occupancy Year"].max(),
                 value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
                 sep=""
-        )
+            ),
+        title="Filters",
+        bg="#f8f8f8",
     ),
     ui.layout_columns(
         ui.layout_columns(
