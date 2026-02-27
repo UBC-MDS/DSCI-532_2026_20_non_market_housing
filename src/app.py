@@ -11,7 +11,7 @@ clean_df = pd.read_csv(
     )
 
 clean_df['Geom'] = clean_df['Geom'].apply(lambda x: wkt.loads(x) if isinstance(x, str) else None)
-
+local_areas = sorted(clean_df["Local Area"].unique().tolist())
 
 status_choices = {
                     "Proposed": "Proposed",
@@ -35,7 +35,15 @@ app_ui = ui.page_sidebar(
                 max=clean_df["Occupancy Year"].max(),
                 value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
                 sep=""
-        )
+            ),
+        ui.input_selectize(
+            id="input_local_area",
+            label="Local Area",
+            choices=local_areas,
+            multiple=True,
+        ),
+        title="Filters",
+        bg="#f8f8f8",
     ),
     ui.layout_columns(
         ui.layout_columns(
@@ -65,7 +73,7 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_df():
-        #local_area = input.input_local_area()
+        local_area = input.input_local_area()
         #operator = input.input_operator()
         year_min, year_max = input.input_year()
         status = input.input_status()
@@ -73,7 +81,7 @@ def server(input, output, session):
             status = list(status_choices.keys())
 
         return clean_df.query(
-        #    "`Local Area` in @local_area & "
+            "`Local Area` in @local_area & "
         #    "`Operator` in @operator & "
             "`Occupancy Year` >= @year_min & "
             "`Occupancy Year` <= @year_max & "
