@@ -60,6 +60,25 @@ app_ui = ui.page_sidebar(
     .accessibility-card .html-fill-item {
         overflow: hidden !important;
     }
+
+    .accessibility-card .card-body {
+        display: flex;
+        justify-content: center;
+        padding: 0 0.75rem 1rem 0.75rem;
+    }
+
+    .accessibility-chart-wrap {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    #accessibility_pie_chart,
+    #accessibility_pie_chart .vega-embed {
+        width: 100% !important;
+        height: 100% !important;
+    }
     """),
     ui.layout_columns(
         ui.layout_columns(
@@ -71,9 +90,14 @@ app_ui = ui.page_sidebar(
             ),
             ui.card("Occupancy Year Line Chart"),
             ui.card(
-                "Accessibility",
                 ui.div(
-                    output_widget("accessibility_pie_chart"),
+                    output_widget(
+                        "accessibility_pie_chart",
+                        width="100%",
+                        height="100%",
+                        fill=True,
+                    ),
+                    class_="accessibility-chart-wrap",
                 ),
                 class_="accessibility-card",
             ),
@@ -135,7 +159,7 @@ def server(input, output, session):
             m.add_layer(marker)
         
         return m
-    @render_altair
+    @render_altair(width="100%", height="100%", fill=True)
     def accessibility_pie_chart():
         return create_accessibility_pie_chart(filtered_df())
 

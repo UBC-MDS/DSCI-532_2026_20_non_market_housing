@@ -59,7 +59,10 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
 
     return (
         alt.Chart(chart_data)
-        .mark_arc(innerRadius=70, outerRadius=120)
+        .mark_arc(
+            innerRadius=alt.ExprRef(expr="max(min(width, height * 0.68) / 4, 20)"),
+            outerRadius=alt.ExprRef(expr="max(min(width, height * 0.68) / 2 - 6, 30)"),
+        )
         .encode(
             theta=alt.Theta("Units:Q", stack=True),
             color=alt.Color(
@@ -68,7 +71,17 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
                     domain=list(accessibility_pie_colors.keys()),
                     range=list(accessibility_pie_colors.values()),
                 ),
-                legend=alt.Legend(title=None, orient="bottom"),
+                legend=alt.Legend(
+                    title=None,
+                    orient="bottom",
+                    direction="horizontal",
+                    columns=2,
+                    columnPadding=12,
+                    rowPadding=4,
+                    labelLimit=120,
+                    labelFontSize=alt.ExprRef(expr="clamp(width / 28, 10, 13)"),
+                    symbolSize=alt.ExprRef(expr="clamp(width * 0.18, 45, 120)"),
+                ),
             ),
             tooltip=[
                 alt.Tooltip("Accessibility:N", title="Category"),
@@ -82,11 +95,18 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
             ],
         )
         .properties(
-            width=300,
-            height=250,
+            title=alt.TitleParams(
+                text="Accessibility",
+                anchor="start",
+                fontSize=alt.ExprRef(expr="clamp(width / 20, 13, 18)"),
+                offset=8,
+            ),
+            width="container",
+            height="container",
+            padding={"top": 16, "right": 6, "bottom": 12, "left": 6},
+            autosize=alt.AutoSizeParams(type="fit", contains="padding", resize=True),
             usermeta={"embedOptions": {"actions": False}},
         )
         .configure_view(strokeWidth=0)
         .configure_axis(domain=False, grid=False)
-        .configure_legend(labelFontSize=12, titleFontSize=14)
     )
