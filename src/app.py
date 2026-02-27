@@ -1,6 +1,12 @@
 from ipyleaflet import Map
-from shiny import App, ui
+from shiny import App, ui, reactive
 from shinywidgets import output_widget, render_widget
+import pandas as pd
+
+clean_df = pd.read_csv(
+    "data/processed/clean-non-market-housing.csv",
+    dtype={"Occupancy Year": "Int64"}
+    )
 
 app_ui = ui.page_sidebar(
     ui.sidebar("Filters", bg="#f8f8f8"),
