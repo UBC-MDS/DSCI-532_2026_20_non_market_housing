@@ -54,6 +54,13 @@ app_ui = ui.page_sidebar(
         title="Filters",
         bg="#f8f8f8",
     ),
+    ui.tags.style("""
+    .accessibility-card,
+    .accessibility-card .card-body,
+    .accessibility-card .html-fill-item {
+        overflow: hidden !important;
+    }
+    """),
     ui.layout_columns(
         ui.layout_columns(
             ui.layout_columns(
@@ -68,6 +75,7 @@ app_ui = ui.page_sidebar(
                 ui.div(
                     output_widget("accessibility_pie_chart"),
                 ),
+                class_="accessibility-card",
             ),
             col_widths=(4, 5, 3),
         ),
