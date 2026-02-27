@@ -64,7 +64,7 @@ app_ui = ui.page_sidebar(
     .accessibility-card .card-body {
         display: flex;
         justify-content: center;
-        padding: 0 0.75rem 1rem 0.75rem;
+        padding: 1rem 0.75rem 0.5rem 0.75rem;
     }
 
     .accessibility-chart-wrap {

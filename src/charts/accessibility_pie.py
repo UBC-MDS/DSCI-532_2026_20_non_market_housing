@@ -60,8 +60,8 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
     return (
         alt.Chart(chart_data)
         .mark_arc(
-            innerRadius=alt.ExprRef(expr="max(min(width, height * 0.68) / 4, 20)"),
-            outerRadius=alt.ExprRef(expr="max(min(width, height * 0.68) / 2 - 6, 30)"),
+            innerRadius=alt.ExprRef(expr="max(min(width, height * 0.88) / 4, 20)"),
+            outerRadius=alt.ExprRef(expr="max(min(width, height * 0.88) / 2 - 2, 30)"),
         )
         .encode(
             theta=alt.Theta("Units:Q", stack=True),
@@ -78,6 +78,7 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
                     columns=2,
                     columnPadding=12,
                     rowPadding=4,
+                    padding=2,
                     labelLimit=120,
                     labelFontSize=alt.ExprRef(expr="clamp(width / 28, 10, 13)"),
                     symbolSize=alt.ExprRef(expr="clamp(width * 0.18, 45, 120)"),
@@ -99,11 +100,11 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
                 text="Accessibility",
                 anchor="start",
                 fontSize=alt.ExprRef(expr="clamp(width / 20, 13, 18)"),
-                offset=8,
+                offset=2,
             ),
             width="container",
             height="container",
-            padding={"top": 16, "right": 6, "bottom": 12, "left": 6},
+            padding={"top": 8, "right": 6, "bottom": 6, "left": 6},
             autosize=alt.AutoSizeParams(type="fit", contains="padding", resize=True),
             usermeta={"embedOptions": {"actions": False}},
         )
