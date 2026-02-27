@@ -1,6 +1,6 @@
 from ipyleaflet import Map
 from shiny import App, ui
-from shinywidgets import output_widget, render_widget
+from shinywidgets import output_widget, render_widget, reactive
 import pandas as pd
 import altair as alt
 
