@@ -15,6 +15,7 @@
 | `input_local_area` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
 | `input_operator` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
 | `input_status` | Input | `ui.input_checkbox_group` | \- | 1, 2, 3 |
+| `input_occupied` | Input | `ui.input_checkbox` | \- | 1, 2, 3 |
 | `input_year` | Input | `ui.input_slider` | \- | 1, 2, 3 |
 | `filtered_df` | Reactive Calc | `@reactive.calc` | `input_local_area`, `input_operator`, `input_project_status`, `input_year` | 1, 2, 3 |
 | `filtered_map` | Output | `@render_widget` | `filtered_df` | 1 |
@@ -29,8 +30,9 @@
 flowchart TD
   A[/input_local_area/] --> F{{filtered_df}}
   B[/input_operator/] --> F
-  C[/input_year/] --> F
-  D[/input_status/] --> F
+  C[/input_occupied/] --> F
+  D[/input_year/] --> F
+  E[/input_status/] --> F
 
   F --> M([filtered_map])
   F --> BC([clientele_bar_chart])
@@ -45,16 +47,32 @@ flowchart TD
 def filtered_df():
     local_area = input.input_local_area()
     operator = input.input_operator()
+    occupied = input.input_occupied()
     year_min, year_max = input.input_year()
     status = input.input_status()
 
-    return clean_df.query(
+    if not local_area:
+        local_area = local_areas
+    if not operator:
+        operator = list(operator_choices.keys())
+    if not status:
+        status = list(status_choices.keys())
+
+    filtered = clean_df.query(
         "`Local Area` in @local_area & "
         "`Operator` in @operator & "
-        "`Occupancy Year` >= @year_min & "
-        "`Occupancy Year` <= @year_max & "
         "`Project Status` in @status"
     )
+
+    if occupied:
+        year_mask = (
+            filtered["`Occupancy Year`"].isna() |
+            (filtered["Occupancy Year"].between(year_min, year_max))
+        )
+    else:
+        year_mask = filtered["Occupancy Year"].between(year_min, year_max)
+
+    return filtered[year_mask]
 ```
 
 ## Calculation Details
@@ -65,10 +83,11 @@ The `@reactive.calc` `filtered_df` depends on the following inputs:
 
 -   `input_local_area`
 -   `input_operator`
+-   `input_occupied`
 -   `input_year`
 -   `input_status`
 
-It filters rows in the dataframe to the selected local area, operator, year of occupancy, and status.
+It filters rows in the dataframe to the selected local area, operator, whether the project is occupied, year of occupancy, and status.
 
 It is consumed by the following outputs:
 
