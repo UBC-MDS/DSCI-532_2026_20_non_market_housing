@@ -1,5 +1,5 @@
 from ipyleaflet import Map
-from shiny import App, ui, reactive
+from shiny import App, ui, reactive, render
 from shinywidgets import output_widget, render_widget
 import pandas as pd
 
@@ -46,12 +46,17 @@ def server(input, output, session):
 
     @reactive.calc
     def filter_data():
+        local_area = input.input_local_area()
+        operator = input.input_operator()
+        year_min, year_max = input.input_year()
+        status = input.input_status()
+
         return clean_df.query(
-            "`Local Area` in input.input_local_area() & "
-            "Operator in input.input_operator() & "
-            "`Occupancy Year` >= input.input_year()[0] & "
-            "`Occupancy Year` <= input.input_year()[1] & "
-            "`Project Status` in input.input_status() & "
+            "`Local Area` in @local_area & "
+            "`Operator` in @operator & "
+            "`Occupancy Year` >= @year_min & "
+            "`Occupancy Year` <= @year_max & "
+            "`Project Status` in @status"
         )
 
     @render_widget
