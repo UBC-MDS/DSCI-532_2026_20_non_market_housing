@@ -1,9 +1,11 @@
 from ipyleaflet import Map, Marker, LayerGroup
 from shiny import App, ui, reactive, render
-from shinywidgets import output_widget, render_widget
+from shinywidgets import output_widget, render_widget, render_altair
 import pandas as pd
 from shapely import wkt
 from ipywidgets import HTML
+
+from charts.accessibility_pie import create_accessibility_pie_chart
 
 clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
@@ -56,12 +58,17 @@ app_ui = ui.page_sidebar(
         ui.layout_columns(
             ui.layout_columns(
                 ui.card("Total count"),
-                ui.card("Clientele Bar Chart"),
+                ui.card("Clientele Bar Chart", style="overflow: hidden;"),
                 col_widths=(12, 12),
                 row_heights=(1, 2),
             ),
             ui.card("Occupancy Year Line Chart"),
-            ui.card("Design Pie Chart"),
+            ui.card(
+                "Accessibility",
+                ui.div(
+                    output_widget("accessibility_pie_chart"),
+                ),
+            ),
             col_widths=(4, 5, 3),
         ),
         ui.layout_columns(
@@ -91,6 +98,10 @@ def server(input, output, session):
             operator = list(operator_choices.keys())
         if not status:
             status = list(status_choices.keys())
+        if not local_area:
+            local_area = local_areas
+        if not operator:
+            operator = list(operator_choices.keys())
 
         return clean_df.query(
             "`Local Area` in @local_area & "
@@ -116,5 +127,9 @@ def server(input, output, session):
             m.add_layer(marker)
         
         return m
+    @render_altair
+    def accessibility_pie_chart():
+        return create_accessibility_pie_chart(filtered_df())
+
 
 app = App(app_ui, server=server)
