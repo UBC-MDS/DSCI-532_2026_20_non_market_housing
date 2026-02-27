@@ -23,13 +23,6 @@ app_ui = ui.page_sidebar(
                 choices=status_choices,
                 selected=[]
         ),
-        ui.input_selectize(
-            "selectize",
-            "Local Area:",
-            local_areas,
-            multiple=True,
-        ),
-        title=
         ui.input_slider(
                 id="input_year",
                 label="Occupancy Year",
@@ -38,7 +31,13 @@ app_ui = ui.page_sidebar(
                 value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
                 sep=""
             ),
-       
+        ui.input_selectize(
+            id="input_local_area",
+            label="Local Area",
+            choices=local_areas,
+            multiple=True,
+        ),
+        title="Filters",
         bg="#f8f8f8",
     ),
     ui.layout_columns(
