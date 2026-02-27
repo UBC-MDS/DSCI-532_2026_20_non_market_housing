@@ -148,3 +148,5 @@ def server(input, output, session):
             .configure_title(anchor="start")
         )
         return chart
+    
+    app = App(app_ui, server=server)
