@@ -9,7 +9,16 @@ clean_df = pd.read_csv(
     )
 
 app_ui = ui.page_sidebar(
-    ui.sidebar("Filters", bg="#f8f8f8"),
+    ui.sidebar(
+        ui.input_slider(
+                id="input_year",
+                label="Occupancy Year",
+                min=clean_df["Occupancy Year"].min(),
+                max=clean_df["Occupancy Year"].max(),
+                value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
+                sep=""
+            ),
+        bg="#f8f8f8"),
     ui.layout_columns(
         ui.layout_columns(
             ui.layout_columns(
@@ -34,6 +43,17 @@ app_ui = ui.page_sidebar(
 
 
 def server(input, output, session):
+
+    @reactive.calc
+    def filter_data():
+        return clean_df.query(
+            "`Local Area` in input.input_local_area() & "
+            "Operator in input.input_operator() & "
+            "`Occupancy Year` >= input.input_year()[0] & "
+            "`Occupancy Year` <= input.input_year()[1] & "
+            "`Project Status` in input.input_status() & "
+        )
+
     @render_widget
     def map():
         return Map(
