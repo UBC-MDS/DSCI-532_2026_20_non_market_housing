@@ -1,5 +1,5 @@
-from ipyleaflet import Map, Marker
-from shiny import App, ui, reactive
+from ipyleaflet import Map, Marker, LayerGroup
+from shiny import App, ui, reactive, render
 from shinywidgets import output_widget, render_widget
 import pandas as pd
 import altair as alt
@@ -58,7 +58,7 @@ app_ui = ui.page_sidebar(
         ui.layout_columns(
             ui.layout_columns(
                 ui.card("Total count"),
-                ui.card("Clientele Bar Chart"), 
+                ui.card("Clientele Bar Chart"),
                 col_widths=(12, 12),
                 row_heights=(1, 2),
             ),
@@ -119,6 +119,7 @@ def server(input, output, session):
 
         return m
 
+  
     @render_widget
     def occupancy_line():
         d = filtered_df().dropna(subset=["Occupancy Year"]).copy()
