@@ -9,10 +9,25 @@ clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
     dtype={"Occupancy Year": "Int64"}
     )
+
 clean_df['Geom'] = clean_df['Geom'].apply(lambda x: wkt.loads(x) if isinstance(x, str) else None)
+
+
+status_choices = {
+                    "Proposed": "Proposed",
+                    "Approved": "Approved",
+                    "Under Construction": "Under Construction",
+                    "Completed": "Completed"
+                }
 
 app_ui = ui.page_sidebar(
     ui.sidebar(
+        ui.input_checkbox_group(
+                id="input_status",
+                label="Project Status",
+                choices=status_choices,
+                selected=[]
+        ),
         ui.input_slider(
                 id="input_year",
                 label="Occupancy Year",
@@ -20,8 +35,8 @@ app_ui = ui.page_sidebar(
                 max=clean_df["Occupancy Year"].max(),
                 value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
                 sep=""
-            ),
-        bg="#f8f8f8"),
+        )
+    ),
     ui.layout_columns(
         ui.layout_columns(
             ui.layout_columns(
@@ -42,6 +57,7 @@ app_ui = ui.page_sidebar(
         row_heights=(2, 3),
     ),
     fillable=True,
+    theme=ui.Theme("lux")
 )
 
 
@@ -52,34 +68,37 @@ def server(input, output, session):
         #local_area = input.input_local_area()
         #operator = input.input_operator()
         year_min, year_max = input.input_year()
-        #status = input.input_status()
+        status = input.input_status()
+        if not status:
+            status = list(status_choices.keys())
 
         return clean_df.query(
-            #"`Local Area` in @local_area & "
-            #"`Operator` in @operator & "
+        #    "`Local Area` in @local_area & "
+        #    "`Operator` in @operator & "
             "`Occupancy Year` >= @year_min & "
-            "`Occupancy Year` <= @year_max "
-            #"`Project Status` in @status"
+            "`Occupancy Year` <= @year_max & "
+            "`Project Status` in @status"
         )
 
     @render_widget
     def map():
         m = Map(center=(49.25, -123.12), zoom=12, scroll_wheel_zoom=True)
         df = filtered_df()
+        df = df.dropna(subset=['Geom'])
         
         if not df.empty:
             for _, row in df.iterrows():
                 geom = row['Geom']
-                if geom:
-                    marker = Marker(location=(geom.y, geom.x), draggable=False)
+                
+                marker = Marker(location=(geom.y, geom.x), draggable=False)
 
-                    marker.popup = HTML(f"""
-                                <b>{row.get('Name', 'N/A')}</b><br>
-                                <b>Address</b>: {row.get('Address', '')}<br>
-                                <b>URL</b>: <a href="{row.get('URL', '')}" target="_blank">{row.get('URL', '')}</a>
-                                """)
-                    
-                    m.add_layer(marker)
+                marker.popup = HTML(f"""
+                            <b>{row.get('Name', 'N/A')}</b><br>
+                            <b>Address</b>: {row.get('Address', '')}<br>
+                            <b>URL</b>: <a href="{row.get('URL', '')}" target="_blank">{row.get('URL', '')}</a>
+                            """)
+                
+                m.add_layer(marker)
                     
         return m
 
