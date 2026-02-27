@@ -14,7 +14,7 @@
 |---------------|---------------|---------------|---------------|---------------|
 | `input_local_area` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
 | `input_operator` | Input | `ui.input_selectize` | \- | 1, 2, 3 |
-| `input_status` | Input | `ui.input_checkbox` | \- | 1, 2, 3 |
+| `input_status` | Input | `ui.input_checkbox_group` | \- | 1, 2, 3 |
 | `input_year` | Input | `ui.input_slider` | \- | 1, 2, 3 |
 | `filtered_df` | Reactive Calc | `@reactive.calc` | `input_local_area`, `input_operator`, `input_project_status`, `input_year` | 1, 2, 3 |
 | `filtered_map` | Output | `@render_widget` | `filtered_df` | 1 |
@@ -41,13 +41,19 @@ flowchart TD
 
 `filtered_df` is a `@reactive.calc` that calls the following function:
 
-``` python
-def filter_data():
+```python
+def filtered_df():
+    local_area = input.input_local_area()
+    operator = input.input_operator()
+    year_min, year_max = input.input_year()
+    status = input.input_status()
+
     return clean_df.query(
-        "`Local Area` in input.input_local_area() & "
-        "Operator in input.input_operator() & "
-        "`Occupancy Year` in input.input_year() & "
-        "`Project Status` in input.input_status() & "
+        "`Local Area` in @local_area & "
+        "`Operator` in @operator & "
+        "`Occupancy Year` >= @year_min & "
+        "`Occupancy Year` <= @year_max & "
+        "`Project Status` in @status"
     )
 ```
 
