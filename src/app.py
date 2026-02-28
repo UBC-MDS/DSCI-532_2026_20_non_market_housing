@@ -43,6 +43,7 @@ app_ui = ui.page_sidebar(
             operator_choices,
             multiple=True
         ),
+        ui.input_checkbox("input_occupied", "Include Unoccupied Projects", True),
         ui.input_slider(
                 id="input_year",
                 label="Occupancy Year",
@@ -121,6 +122,7 @@ def server(input, output, session):
     def filtered_df():
         local_area = input.input_local_area()
         operator = input.input_operator()
+        include_unoccupied = input.input_occupied()
         year_min, year_max = input.input_year()
         status = input.input_status()
 
@@ -135,13 +137,24 @@ def server(input, output, session):
         if not operator:
             operator = list(operator_choices.keys())
 
-        return clean_df.query(
+        filtered = clean_df.copy().query(
             "`Local Area` in @local_area & "
             "`Operator` in @operator & "
-            "`Occupancy Year` >= @year_min & "
-            "`Occupancy Year` <= @year_max & "
             "`Project Status` in @status"
         )
+
+        if include_unoccupied:
+            year_mask = (
+                filtered["Occupancy Year"].isna() |
+                (filtered["Occupancy Year"].between(
+                    year_min, year_max, inclusive="both"))
+            )
+        else:
+            year_mask = filtered["Occupancy Year"].between(
+                year_min, year_max, inclusive="both"
+            )
+
+        return filtered[year_mask]
 
     @render_widget
     def map():
