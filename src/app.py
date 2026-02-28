@@ -5,7 +5,7 @@ import pandas as pd
 from shapely import wkt
 from ipywidgets import HTML
 
-from charts.accessibility_pie import create_accessibility_pie_chart
+from .charts.accessibility_pie import create_accessibility_pie_chart
 from charts.clientele_bar_chart import make_clientele_bar_chart
 from charts.occupancy_line_chart import make_occupancy_line_chart
 
