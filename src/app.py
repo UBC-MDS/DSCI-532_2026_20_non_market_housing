@@ -5,8 +5,8 @@ import pandas as pd
 from shapely import wkt
 from ipywidgets import HTML
 
-from charts.accessibility_pie import create_accessibility_pie_chart
-from charts.occupancy_line_chart import make_occupancy_line_chart
+from .charts.accessibility_pie import create_accessibility_pie_chart
+from .charts.occupancy_line_chart import make_occupancy_line_chart
 
 clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
@@ -84,7 +84,10 @@ app_ui = ui.page_sidebar(
     ui.layout_columns(
         ui.layout_columns(
             ui.layout_columns(
-                ui.card("Total count"),
+                ui.value_box(
+                title="Total Projects",
+                value=ui.output_text("total_count"),
+                ),
                 ui.card("Clientele Bar Chart", style="overflow: hidden;"),
                 col_widths=(12, 12),
                 row_heights=(1, 2),
@@ -130,10 +133,10 @@ def server(input, output, session):
 
         if not local_area:
             local_area = local_areas
-        if not operator:
-            operator = list(operator_choices.keys())
         if not status:
             status = list(status_choices.keys())
+        if not operator:
+            operator = list(operator_choices.keys())
 
         return clean_df.query(
             "`Local Area` in @local_area & "
@@ -163,6 +166,10 @@ def server(input, output, session):
     @render_altair(width="100%", height="100%", fill=True)
     def accessibility_pie_chart():
         return create_accessibility_pie_chart(filtered_df())
+    
+    @render.text
+    def total_count():
+        return str(len(filtered_df()))
 
     @render_altair(width="100%", height="100%", fill=True)
     def occupancy_line():
