@@ -46,7 +46,7 @@ def make_clientele_bar_chart(d: pd.DataFrame) -> alt.Chart:
             y=alt.Y("Units:Q", title="Total units"),
             color=alt.Color("Clientele:N", scale=alt.Scale(scheme="viridis"), legend=None),
         )
-        .properties(title="Clientele unit totals", height=220, width="container")
+        .properties(title="Clientele unit totals", height="container", width="container")
         .configure_view(stroke=None)
         .configure_title(anchor="start")
     )

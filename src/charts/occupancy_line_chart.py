@@ -45,7 +45,7 @@ def make_occupancy_line_chart(d: pd.DataFrame) -> alt.Chart:
             ),
             y=alt.Y("Developments:Q", title="Number of developments"),
         )
-        .properties(title="Developments by occupancy year", height=220, width="container")
+        .properties(title="Developments by occupancy year", height="container", width="container")
         .configure_view(stroke=None)
         .configure_title(anchor="start")
     )
