@@ -6,6 +6,8 @@ from shapely import wkt
 from ipywidgets import HTML
 
 from .charts.accessibility_pie import create_accessibility_pie_chart
+from .charts.clientele_bar_chart import make_clientele_bar_chart
+from .charts.occupancy_line_chart import make_occupancy_line_chart
 
 clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
@@ -87,11 +89,18 @@ app_ui = ui.page_sidebar(
                 title="Total Projects",
                 value=ui.output_text("total_count"),
                 ),
-                ui.card("Clientele Bar Chart", style="overflow: hidden;"),
+                ui.card(
+                    ui.card_header("Clientele Bar Chart"),
+                    output_widget("clientele_bar", width="100%"),
+                    style="overflow: hidden;",
+                ),
                 col_widths=(12, 12),
                 row_heights=(1, 2),
             ),
-            ui.card("Occupancy Year Line Chart"),
+            ui.card(
+                ui.card_header("Occupancy Year Line Chart"),
+                output_widget("occupancy_line", width="100%"),
+            ),
             ui.card(
                 ui.div(
                     output_widget(
@@ -167,5 +176,12 @@ def server(input, output, session):
     def total_count():
         return str(len(filtered_df()))
 
+    @render_altair
+    def clientele_bar():
+        return make_clientele_bar_chart(filtered_df())
+
+    @render_altair
+    def occupancy_line():
+        return make_occupancy_line_chart(filtered_df())
 
 app = App(app_ui, server=server)
