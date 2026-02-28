@@ -91,7 +91,7 @@ app_ui = ui.page_sidebar(
                 ),
                 ui.card(
                     ui.card_header("Clientele Bar Chart"),
-                    output_widget("clientele_bar", width="100%"),
+                    output_widget("clientele_bar", width="100%", height="100%", fill=True),
                     style="overflow: hidden;",
                 ),
                 col_widths=(12, 12),
@@ -99,7 +99,8 @@ app_ui = ui.page_sidebar(
             ),
             ui.card(
                 ui.card_header("Occupancy Year Line Chart"),
-                output_widget("occupancy_line", width="100%"),
+                output_widget("occupancy_line", width="100%", height="100%", fill=True),
+                style="overflow: hidden;"
             ),
             ui.card(
                 ui.div(
