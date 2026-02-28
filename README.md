@@ -34,5 +34,6 @@ conda activate non-market-housing-dashboard
 Run the dashboard using Shiny with the following command:
 
 ```bash
-shiny run --reload --launch-browser src/app.py
+shiny run --reload --launch-browser src.app:app
 ```
+
