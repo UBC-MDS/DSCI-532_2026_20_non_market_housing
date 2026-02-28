@@ -7,29 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [0.2.0]
 
 ### Added
+
 - Interactive map showing non-market housing developments as point markers.
 - Total count of selected developments based on current filter selections.
 - Accessibility pie chart to summarize accessible/adaptable design-related unit counts for the filtered set of developments.
 - Clientele bar chart to compare unit totals by clientele group (Families, Seniors, Other).
 - Occupancy year line chart to show development counts over time based on first occupancy year.
-- Filters for Local Area, Operator, and Project Status to support interactive exploration across all dashboard components.
+- Filters for Local Area, Operator, Project Status, Occupancy Year, and whether to include projects with blank Occupancy Year to support interactive exploration across all dashboard components.
 
 ### Changed
+
 - Reorganized the layout by moving all filters into a left-side sidebar to make the filtering workflow more consistent and easier to scan.
 - Adjusted layout proportions by using a smaller map footprint to create space for additional charts and summaries without overcrowding the page.
-
   
 ## Milestone 2 Reflection
 
 ### Implementation Status
 
-TODO
+Every job story and their corresponding components have been implemented, as demonstrated in the section with all added elements.
 
 ### Deviations
 
-TODO
+The layout was reorganized so that the filter bar is in the left sidebar, making it easier to identify and use. The size of the map was also made smaller in order to avoid overcrowding and create more space for the other output.
 
 ### Known Issues
+
+The map does not always show every project as a marker - we believe this to be an issue with ipyleaflet.
 
 ### Best Practices
 
