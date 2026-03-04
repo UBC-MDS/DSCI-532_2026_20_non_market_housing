@@ -25,38 +25,7 @@ status_choices = {
                 }
 operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())}
 
-app_ui = ui.page_sidebar(
-    ui.sidebar(
-        ui.input_selectize(
-            id="input_local_area",
-            label="Local Area",
-            choices=local_areas,
-            multiple=True,
-        ),
-        ui.input_checkbox_group(
-                id="input_status",
-                label="Project Status",
-                choices=status_choices,
-                selected=[]
-        ),
-        ui.input_selectize(
-            "input_operator",
-            "Operator",
-            operator_choices,
-            multiple=True
-        ),
-        ui.input_checkbox("input_occupied", "Include Unoccupied Projects", True),
-        ui.input_slider(
-                id="input_year",
-                label="Occupancy Year",
-                min=clean_df["Occupancy Year"].min(),
-                max=clean_df["Occupancy Year"].max(),
-                value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
-                sep=""
-            ),
-        title="Filters",
-        bg="#f8f8f8",
-    ),
+dashboard_content = [
     ui.tags.style("""
     .accessibility-card,
     .accessibility-card .card-body,
@@ -124,8 +93,46 @@ app_ui = ui.page_sidebar(
         col_widths=(12, 12),
         row_heights=(2, 3),
     ),
+]
+
+filters_sidebar = ui.sidebar(
+    ui.input_selectize(
+        id="input_local_area",
+        label="Local Area",
+        choices=local_areas,
+        multiple=True,
+    ),
+    ui.input_checkbox_group(
+            id="input_status",
+            label="Project Status",
+            choices=status_choices,
+            selected=[]
+    ),
+    ui.input_selectize(
+        "input_operator",
+        "Operator",
+        operator_choices,
+        multiple=True
+    ),
+    ui.input_checkbox("input_occupied", "Include Unoccupied Projects", True),
+    ui.input_slider(
+            id="input_year",
+            label="Occupancy Year",
+            min=clean_df["Occupancy Year"].min(),
+            max=clean_df["Occupancy Year"].max(),
+            value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
+            sep=""
+        ),
+    title="Filters",
+    bg="#f8f8f8",
+)
+
+app_ui = ui.page_navbar(
+    ui.nav_panel("Dashboard", ui.layout_sidebar(filters_sidebar, *dashboard_content, fillable=True)),
+    ui.nav_panel("Assistant", ui.card("Content for tab B")),
+    title="Non-Market Housing",
     fillable=True,
-    theme=ui.Theme("lux")
+    theme=ui.Theme("lux"),
 )
 
 
