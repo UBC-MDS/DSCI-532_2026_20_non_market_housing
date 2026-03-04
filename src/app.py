@@ -129,7 +129,25 @@ filters_sidebar = ui.sidebar(
 
 app_ui = ui.page_navbar(
     ui.nav_panel("Dashboard", ui.layout_sidebar(filters_sidebar, *dashboard_content, fillable=True)),
-    ui.nav_panel("Assistant", ui.card("Content for tab B")),
+    ui.nav_panel(
+        "Assistant",
+        ui.layout_columns(
+            ui.card(
+                ui.card_header("Assistant Output"),
+                ui.markdown("Results"),
+                style="height: 100%;",
+            ),
+            ui.chat_ui(
+                "assistant_chat",
+                messages=[
+                    "Hi! I'm your non-market housing assistant. Ask me anything about the data or how to use this dashboard."
+                ],
+            ),
+            col_widths=(8, 4),
+            fillable=True,
+        ),
+        value="assistant",
+    ),
     title="Non-Market Housing",
     fillable=True,
     theme=ui.Theme("lux"),
@@ -137,6 +155,12 @@ app_ui = ui.page_navbar(
 
 
 def server(input, output, session):
+    chat = ui.Chat(id="assistant_chat")
+
+    @chat.on_user_submit
+    async def handle_user_input(user_input: str):
+        # Simple echo response; can be extended with LLM or data-aware logic
+        await chat.append_message(f"You asked: {user_input}\n\nI'm a placeholder assistant. Connect me to an LLM or add custom logic to answer questions about the non-market housing data.")
 
     @reactive.calc
     def filtered_df():
