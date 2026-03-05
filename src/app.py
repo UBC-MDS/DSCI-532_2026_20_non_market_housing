@@ -25,6 +25,7 @@ clean_df['Geom'] = clean_df['Geom'].apply(lambda x: wkt.loads(x) if isinstance(x
 
 
 querychat_df = clean_df.drop(columns=["Geom"]).copy()
+querychat_df = querychat_df.drop(columns=["Unnamed: 0"])
 project_root = Path(__file__).resolve().parent.parent
 _querychat_client = get_querychat_client()
 qc_params = {
@@ -152,12 +153,12 @@ app_ui = ui.page_navbar(
     ui.nav_panel(
         "Assistant",
         ui.layout_sidebar(
-            querychat_sidebar("querychat"),
-                ui.card(
-                    ui.card_header(ui.output_text("qc_title")),
-                    ui.output_data_frame("qc_table"),
-                    fill=True,
-                ),
+            querychat_sidebar("querychat", position="right", open="always"),
+            ui.card(
+                ui.card_header(ui.output_text("qc_title")),
+                ui.output_data_frame("qc_table"),
+                fill=True,
+            ),
             fillable=True,
         ),
         value="assistant",
