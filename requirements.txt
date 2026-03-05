@@ -1,5 +1,7 @@
-﻿shiny==1.4
+shiny==1.4
 shinywidgets==0.7.1
+chatlas[anthropic,openai,google,github]
+python-dotenv>=1.0.0
 anywidget
 ipyleaflet==0.20
 pandas==3.0.0

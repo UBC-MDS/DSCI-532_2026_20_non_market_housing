@@ -4,9 +4,13 @@ from shinywidgets import output_widget, render_widget, render_altair
 import pandas as pd
 from shapely import wkt
 from ipywidgets import HTML
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from .charts.accessibility_pie import create_accessibility_pie_chart
 from .charts.clientele_bar_chart import make_clientele_bar_chart
+from .llm_client import create_chat_client
 from .charts.occupancy_line_chart import make_occupancy_line_chart
 
 clean_df = pd.read_csv(
@@ -25,38 +29,7 @@ status_choices = {
                 }
 operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())}
 
-app_ui = ui.page_sidebar(
-    ui.sidebar(
-        ui.input_selectize(
-            id="input_local_area",
-            label="Local Area",
-            choices=local_areas,
-            multiple=True,
-        ),
-        ui.input_checkbox_group(
-                id="input_status",
-                label="Project Status",
-                choices=status_choices,
-                selected=[]
-        ),
-        ui.input_selectize(
-            "input_operator",
-            "Operator",
-            operator_choices,
-            multiple=True
-        ),
-        ui.input_checkbox("input_occupied", "Include Unoccupied Projects", True),
-        ui.input_slider(
-                id="input_year",
-                label="Occupancy Year",
-                min=clean_df["Occupancy Year"].min(),
-                max=clean_df["Occupancy Year"].max(),
-                value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
-                sep=""
-            ),
-        title="Filters",
-        bg="#f8f8f8",
-    ),
+dashboard_content = [
     ui.tags.style("""
     .accessibility-card,
     .accessibility-card .card-body,
@@ -124,12 +97,85 @@ app_ui = ui.page_sidebar(
         col_widths=(12, 12),
         row_heights=(2, 3),
     ),
+]
+
+filters_sidebar = ui.sidebar(
+    ui.input_selectize(
+        id="input_local_area",
+        label="Local Area",
+        choices=local_areas,
+        multiple=True,
+    ),
+    ui.input_checkbox_group(
+            id="input_status",
+            label="Project Status",
+            choices=status_choices,
+            selected=[]
+    ),
+    ui.input_selectize(
+        "input_operator",
+        "Operator",
+        operator_choices,
+        multiple=True
+    ),
+    ui.input_checkbox("input_occupied", "Include Unoccupied Projects", True),
+    ui.input_slider(
+            id="input_year",
+            label="Occupancy Year",
+            min=clean_df["Occupancy Year"].min(),
+            max=clean_df["Occupancy Year"].max(),
+            value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
+            sep=""
+        ),
+    title="Filters",
+    bg="#f8f8f8",
+)
+
+app_ui = ui.page_navbar(
+    ui.nav_panel("Dashboard", ui.layout_sidebar(filters_sidebar, *dashboard_content, fillable=True)),
+    ui.nav_panel(
+        "Assistant",
+        ui.layout_columns(
+            ui.card(
+                ui.card_header("Assistant Output"),
+                ui.markdown("Results"),
+                style="height: 100%;",
+            ),
+            ui.chat_ui(
+                "assistant_chat",
+                messages=[
+                    "Hi! I'm your non-market housing assistant. Ask me anything about the data or how to use this dashboard."
+                ],
+            ),
+            col_widths=(8, 4),
+            fillable=True,
+        ),
+        value="assistant",
+    ),
+    title="Non-Market Housing",
     fillable=True,
-    theme=ui.Theme("lux")
+    theme=ui.Theme("lux"),
 )
 
 
 def server(input, output, session):
+    chat = ui.Chat(id="assistant_chat")
+    chat_client = create_chat_client()
+
+    @chat.on_user_submit
+    async def handle_user_input(user_input: str):
+        if chat_client is None:
+            await chat.append_message(
+                "No LLM provider configured."
+            )
+            return
+        try:
+            response = await chat_client.stream_async(user_input)
+            await chat.append_message_stream(response)
+        except Exception as e:
+            await chat.append_message(
+                f"Sorry, an error occurred: {str(e)}."
+            )
 
     @reactive.calc
     def filtered_df():
