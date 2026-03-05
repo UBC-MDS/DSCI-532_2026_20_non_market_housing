@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from ipyleaflet import Map, Marker, LayerGroup
 from shiny import App, ui, reactive, render
 from shinywidgets import output_widget, render_widget, render_altair
@@ -5,13 +7,14 @@ import pandas as pd
 from shapely import wkt
 from ipywidgets import HTML
 from dotenv import load_dotenv
+from querychat import init as querychat_init, sidebar as querychat_sidebar, server as querychat_server
 
 load_dotenv()
 
 from .charts.accessibility_pie import create_accessibility_pie_chart
 from .charts.clientele_bar_chart import make_clientele_bar_chart
-from .llm_client import create_chat_client
 from .charts.occupancy_line_chart import make_occupancy_line_chart
+from .llm_client import get_querychat_client
 
 clean_df = pd.read_csv(
     "data/processed/clean-non-market-housing.csv",
@@ -19,6 +22,19 @@ clean_df = pd.read_csv(
     )
 
 clean_df['Geom'] = clean_df['Geom'].apply(lambda x: wkt.loads(x) if isinstance(x, str) else None)
+
+
+querychat_df = clean_df.drop(columns=["Geom"]).copy()
+project_root = Path(__file__).resolve().parent.parent
+_querychat_client = get_querychat_client()
+qc_params = {
+    "greeting": project_root / "greeting.md",
+    "data_description": project_root / "data_description.md",
+}
+if _querychat_client is not None:
+    qc_params["client"] = _querychat_client
+qc_config = querychat_init(querychat_df, "non_market_housing", **qc_params)
+
 local_areas = sorted(clean_df["Local Area"].unique().tolist())
 
 status_choices = {
@@ -135,19 +151,13 @@ app_ui = ui.page_navbar(
     ui.nav_panel("Dashboard", ui.layout_sidebar(filters_sidebar, *dashboard_content, fillable=True)),
     ui.nav_panel(
         "Assistant",
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Assistant Output"),
-                ui.markdown("Results"),
-                style="height: 100%;",
-            ),
-            ui.chat_ui(
-                "assistant_chat",
-                messages=[
-                    "Hi! I'm your non-market housing assistant. Ask me anything about the data or how to use this dashboard."
-                ],
-            ),
-            col_widths=(8, 4),
+        ui.layout_sidebar(
+            querychat_sidebar("querychat"),
+                ui.card(
+                    ui.card_header(ui.output_text("qc_title")),
+                    ui.output_data_frame("qc_table"),
+                    fill=True,
+                ),
             fillable=True,
         ),
         value="assistant",
@@ -159,23 +169,15 @@ app_ui = ui.page_navbar(
 
 
 def server(input, output, session):
-    chat = ui.Chat(id="assistant_chat")
-    chat_client = create_chat_client()
+    qc_vals = querychat_server("querychat", querychat_config=qc_config)
 
-    @chat.on_user_submit
-    async def handle_user_input(user_input: str):
-        if chat_client is None:
-            await chat.append_message(
-                "No LLM provider configured."
-            )
-            return
-        try:
-            response = await chat_client.stream_async(user_input)
-            await chat.append_message_stream(response)
-        except Exception as e:
-            await chat.append_message(
-                f"Sorry, an error occurred: {str(e)}."
-            )
+    @render.text
+    def qc_title():
+        return qc_vals.title() or "Non-Market Housing Data"
+
+    @render.data_frame
+    def qc_table():
+        return qc_vals.df()
 
     @reactive.calc
     def filtered_df():

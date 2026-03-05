@@ -17,5 +17,5 @@ dependencies:
   - shapely=2.1.2
   - pip
   - pip:
-    - chatlas[anthropic,openai,google,github]
+    - querychat
     - python-dotenv>=1.0.0

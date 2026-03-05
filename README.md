@@ -45,13 +45,16 @@ Run the dashboard using Shiny with the following command:
 shiny run --reload --launch-browser src.app:app
 ```
 
-### Assistant Chat (LLM)
+### Assistant (querychat)
 
-The Assistant tab uses an LLM for conversational help. To enable it:
+The Assistant tab uses [querychat](https://posit-dev.github.io/querychat/py/) for natural language exploration of the housing data. Ask questions in plain English and see the results in a data table with the generated SQL.
+
+To enable it:
 
 1. Copy `.env.example` to `.env`
-2. Add your API key for one provider:
-   - **Anthropic (Claude)**: `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/account/keys)
-   - **OpenAI (GPT)**: `OPENAI_API_KEY` from [platform.openai.com](https://platform.openai.com/api-keys)
-   - **Google (Gemini)**: `GOOGLE_API_KEY` from [aistudio.google.com](https://aistudio.google.com/app/apikey)
+2. Add **one** of the following:
+   - **OpenAI** (default): `OPENAI_API_KEY` from [platform.openai.com](https://platform.openai.com/api-keys)
+   - **GitHub PAT** (free): `GITHUB_TOKEN` from [github.com/settings/tokens](https://github.com/settings/tokens) with the "models" scope. Sign up at [github.com/marketplace/models](https://github.com/marketplace/models) for access.
 3. Restart the app
+
+If both are set, `GITHUB_TOKEN` takes precedence. You can use other providers by setting `QUERYCHAT_CLIENT` (e.g. `anthropic/claude-sonnet-4-5`).
