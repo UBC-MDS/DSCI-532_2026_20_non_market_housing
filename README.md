@@ -54,4 +54,5 @@ The Assistant tab uses an LLM for conversational help. To enable it:
    - **Anthropic (Claude)**: `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/account/keys)
    - **OpenAI (GPT)**: `OPENAI_API_KEY` from [platform.openai.com](https://platform.openai.com/api-keys)
    - **Google (Gemini)**: `GOOGLE_API_KEY` from [aistudio.google.com](https://aistudio.google.com/app/apikey)
+   - **GitHub PAT** (free): `GITHUB_TOKEN` from [github.com/settings/tokens](https://github.com/settings/tokens) with the "models" scope. Sign up at [github.com/marketplace/models](https://github.com/marketplace/models) for access.
 3. Restart the app
