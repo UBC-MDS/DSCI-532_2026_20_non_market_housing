@@ -3,7 +3,7 @@ import os
 
 
 def create_chat_client():
-    """Create chatlas client from ANTHROPIC_API_KEY, OPENAI_API_KEY, or GOOGLE_API_KEY in .env."""
+    """Create chatlas client from ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY, or GITHUB_TOKEN in .env."""
     system_prompt = (
         # TODO: Update
         "You are a helpful assistant for a non-market housing dashboard in Vancouver. "
@@ -25,6 +25,12 @@ def create_chat_client():
         from chatlas import ChatGoogle
         return ChatGoogle(
             model="gemini-3.1-flash-lite-preview",
+            system_prompt=system_prompt,
+        )
+    if os.getenv("GITHUB_TOKEN"):
+        from chatlas import ChatGithub
+        return ChatGithub(
+            model="openai/gpt-4o-mini",
             system_prompt=system_prompt,
         )
     return None
