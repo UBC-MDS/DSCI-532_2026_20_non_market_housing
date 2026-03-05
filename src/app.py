@@ -4,9 +4,13 @@ from shinywidgets import output_widget, render_widget, render_altair
 import pandas as pd
 from shapely import wkt
 from ipywidgets import HTML
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from .charts.accessibility_pie import create_accessibility_pie_chart
 from .charts.clientele_bar_chart import make_clientele_bar_chart
+from .llm_client import create_chat_client
 from .charts.occupancy_line_chart import make_occupancy_line_chart
 
 clean_df = pd.read_csv(
@@ -156,11 +160,22 @@ app_ui = ui.page_navbar(
 
 def server(input, output, session):
     chat = ui.Chat(id="assistant_chat")
+    chat_client = create_chat_client()
 
     @chat.on_user_submit
     async def handle_user_input(user_input: str):
-        # Simple echo response; can be extended with LLM or data-aware logic
-        await chat.append_message(f"You asked: {user_input}\n\nI'm a placeholder assistant. Connect me to an LLM or add custom logic to answer questions about the non-market housing data.")
+        if chat_client is None:
+            await chat.append_message(
+                "No LLM provider configured."
+            )
+            return
+        try:
+            response = await chat_client.stream_async(user_input)
+            await chat.append_message_stream(response)
+        except Exception as e:
+            await chat.append_message(
+                f"Sorry, an error occurred: {str(e)}."
+            )
 
     @reactive.calc
     def filtered_df():
