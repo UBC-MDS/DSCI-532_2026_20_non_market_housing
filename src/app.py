@@ -178,7 +178,13 @@ def server(input, output, session):
 
     @render.data_frame
     def qc_table():
-        return qc_vals.df()
+        df = qc_vals.df().copy()
+
+        df["URL"] = df["URL"].apply(
+            lambda x: ui.a(x, href=x, target="_blank") if x else ""
+        )
+
+        return df
 
     @reactive.calc
     def filtered_df():
