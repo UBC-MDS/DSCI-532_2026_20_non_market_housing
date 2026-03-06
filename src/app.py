@@ -48,6 +48,11 @@ operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())
 
 dashboard_content = [
     ui.tags.style("""
+    .bslib-value-box,
+    .bslib-value-box .card-body {
+        padding-top: 0 !important;
+    }
+
     .accessibility-card,
     .accessibility-card .card-body,
     .accessibility-card .html-fill-item {
