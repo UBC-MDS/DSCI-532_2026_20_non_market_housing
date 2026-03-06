@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [0.3.0]
 
 ### Added
+- Add LLM assistant chat page that can filter data for visuals on the page.
+- Table of data in the assistant page.
+- Download button for filtered data in the assistant page.
+- Tooltip functionality to the line and bar charts in the dashboard.
 
 ### Changed
 - removed titles from clientele bar chart and development count vs. occupancy year to make card titles more consistent.
+
+### Changed
 
 ### Fixed
 

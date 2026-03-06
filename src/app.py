@@ -152,10 +152,30 @@ app_ui = ui.page_navbar(
         "Assistant",
         ui.layout_sidebar(
             querychat_sidebar("querychat", position="right", open="always"),
-            ui.card(
-                ui.card_header(ui.output_text("qc_title")),
-                ui.output_data_frame("qc_table"),
-                fill=True,
+            ui.layout_columns(
+                ui.layout_columns(
+                    ui.layout_columns(
+                        ui.card(
+                            "bar chart"
+                        ),
+                        ui.download_button(
+                            "download_view", "⬇ Download filtered view", class_="btn-primary"
+                        ),
+                        col_widths=(12, 12),
+                        row_heights=(5, 1),
+                    ),
+                    ui.card(
+                        "pie chart"
+                    ),
+                    col_widths=(6, 6)
+                ),
+                ui.card(
+                    ui.card_header(ui.output_text("qc_title")),
+                    ui.output_data_frame("qc_table"),
+                    fill=True,
+                ),
+                col_widths=(12, 12),
+                row_heights=(2, 3),
             ),
             fillable=True,
         ),
@@ -244,5 +264,9 @@ def server(input, output, session):
     @render_altair
     def occupancy_line():
         return make_occupancy_line_chart(filtered_df())
+    
+    @render.download(filename="non_market_housing_filtered.csv")
+    def download_view():
+        yield qc_table.data_view().to_csv(index=False)
 
 app = App(app_ui, server=server)
