@@ -44,6 +44,10 @@ def make_occupancy_line_chart(d: pd.DataFrame) -> alt.Chart:
                 axis=alt.Axis(format="d"),
             ),
             y=alt.Y("Developments:Q", title="Number of developments"),
+            tooltip=[
+                alt.Tooltip("Occupancy Year:Q", title="Occupancy year"),
+                alt.Tooltip("Developments:Q", title="Number of developments", format=",")
+            ]
         )
         .properties(title="Developments by occupancy year", height="container", width="container")
         .configure_view(stroke=None)
