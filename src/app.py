@@ -48,6 +48,15 @@ operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())
 
 dashboard_content = [
     ui.tags.style("""
+    .selectize-input {
+        border-color: #6c757d !important;
+    }
+
+    .shiny-input-checkboxgroup input[type="checkbox"]:not(:checked),
+    .shiny-input-checkbox:not(:checked) {
+        border-color: #6c757d !important;
+    }
+
     .bslib-value-box,
     .bslib-value-box .card-body {
         padding-top: 0 !important;
