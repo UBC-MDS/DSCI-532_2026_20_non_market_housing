@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0]
+
+### Added
+- Add LLM assistant chat page that can filter data for visuals on the page.
+- Table of data in the assistant page.
+- Download button for filtered data in the assistant page.
+- Tooltip functionality to the line and bar charts in the dashboard.
+
+### Changed
+
+### Fixed
+
+### Known Issues
+
+### Reflection
+
+
 ## [0.2.0]
 
 ### Added
