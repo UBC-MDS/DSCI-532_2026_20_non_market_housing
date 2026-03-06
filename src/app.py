@@ -81,7 +81,6 @@ dashboard_content = [
                 value=ui.output_text("total_count"),
                 ),
                 ui.card(
-                    ui.card_header("Clientele Bar Chart"),
                     output_widget("clientele_bar", width="100%", fill=True),
                     style="overflow: hidden;",
                 ),
@@ -89,7 +88,6 @@ dashboard_content = [
                 row_heights=(0.7, 2.7),
             ),
             ui.card(
-                ui.card_header("Occupancy Year Line Chart"),
                 output_widget("occupancy_line", width="100%", fill=True),
                 style="overflow: hidden;"
             ),

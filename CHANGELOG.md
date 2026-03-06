@@ -13,13 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Tooltip functionality to the line and bar charts in the dashboard.
 
 ### Changed
+- removed titles from clientele bar chart and development count vs. occupancy year to make card titles more consistent.
+
+### Changed
 
 ### Fixed
 
 ### Known Issues
 
 ### Reflection
-
 
 ## [0.2.0]
 
