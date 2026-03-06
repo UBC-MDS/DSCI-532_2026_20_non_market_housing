@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 - Add LLM assistant chat page that can filter data for visuals on the page.
 - Table of data in the assistant page.
-- Download button for filtered data in the assistant page.
+- Download button for filtered data in the assistant page, with clickable URLs.
 - Tooltip functionality to the line and bar charts in the dashboard.
 
 ### Changed
