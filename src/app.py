@@ -48,6 +48,20 @@ operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())
 
 dashboard_content = [
     ui.tags.style("""
+    .selectize-input {
+        border-color: #6c757d !important;
+    }
+
+    .shiny-input-checkboxgroup input[type="checkbox"]:not(:checked),
+    .shiny-input-checkbox:not(:checked) {
+        border-color: #6c757d !important;
+    }
+
+    .bslib-value-box,
+    .bslib-value-box .card-body {
+        padding-top: 0 !important;
+    }
+
     .accessibility-card,
     .accessibility-card .card-body,
     .accessibility-card .html-fill-item {
@@ -73,12 +87,19 @@ dashboard_content = [
         height: 100% !important;
     }
     """),
-    ui.layout_columns(
-        ui.layout_columns(
             ui.layout_columns(
-                ui.value_box(
-                title="Total Projects",
-                value=ui.output_text("total_count"),
+                ui.layout_columns(
+                ui.layout_columns(
+                ui.layout_columns(
+                    ui.value_box(
+                        title="Total Projects",
+                        value=ui.output_text("total_count"),
+                    ),
+                    ui.value_box(
+                        title="Total Units",
+                        value=ui.output_text("total_units"),
+                    ),
+                    col_widths=(6, 6),
                 ),
                 ui.card(
                     output_widget("clientele_bar", width="100%", fill=True),
@@ -262,6 +283,15 @@ def server(input, output, session):
     @render.text
     def total_count():
         return str(len(filtered_df()))
+
+    @render.text
+    def total_units():
+        df = filtered_df()
+        unit_cols = ["Adaptable", "Accessible", "Standard"]
+        if all(c in df.columns for c in unit_cols):
+            total = df[unit_cols].fillna(0).astype(float).sum().sum()
+            return f"{int(total):,}"
+        return "0"
 
     @render_altair
     def clientele_bar():
