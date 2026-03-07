@@ -177,7 +177,7 @@ app_ui = ui.page_navbar(
                 ui.layout_columns(
                     ui.layout_columns(
                         ui.card(
-                            "bar chart"
+                            output_widget("qc_clientele_bar", width="100%", fill=True),
                         ),
                         ui.download_button(
                             "download_view", "⬇ Download filtered view", class_="btn-primary"
@@ -186,7 +186,7 @@ app_ui = ui.page_navbar(
                         row_heights=(5, 1),
                     ),
                     ui.card(
-                        "pie chart"
+                        output_widget("qc_accessibility_pie", width="100%", fill=True),
                     ),
                     col_widths=(6, 6)
                 ),
@@ -304,5 +304,15 @@ def server(input, output, session):
     @render.download(filename="non_market_housing_filtered.csv")
     def download_view():
         yield qc_table.data_view().to_csv(index=False)
+
+    @render_altair
+    def qc_clientele_bar():
+        df = qc_vals.df().copy()
+        return make_clientele_bar_chart(df)
+
+    @render_altair(width="100%", height="100%", fill=True)
+    def qc_accessibility_pie():
+        df = qc_vals.df().copy()
+        return create_accessibility_pie_chart(df)
 
 app = App(app_ui, server=server)
