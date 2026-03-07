@@ -46,13 +46,15 @@ This week’s milestone focused on adding an AI-powered Assistant tab to the das
 
 ### Implementation Status
 
-TODO
+Every job story and their corresponding components have been implemented, as demonstrated in the section with all added elements.
 
 ### Deviations
 
-TODO
+The layout was reorganized so that the filter bar is in the left sidebar, making it easier to identify and use. The size of the map was also made smaller in order to avoid overcrowding and create more space for the other output.
 
 ### Known Issues
+
+The map does not always show every project as a marker - we believe this to be an issue with ipyleaflet.
 
 ### Best Practices
 

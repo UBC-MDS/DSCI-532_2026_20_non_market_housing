@@ -17,5 +17,5 @@ dependencies:
   - shapely=2.1.2
   - pip
   - pip:
-    - querychat
+    - querychat<0.3
     - python-dotenv>=1.0.0
