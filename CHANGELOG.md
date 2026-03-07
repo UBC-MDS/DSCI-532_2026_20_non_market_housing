@@ -12,12 +12,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 -   Table of data in the assistant page.
 -   Download button for filtered data in the assistant page, with clickable URLs.
 -   Tooltip functionality to the line and bar charts in the dashboard.
+-   Added clientele bar chart and accessibility pie chart to the Assistant tab.
 
 ### Changed
 
 -   removed titles from clientele bar chart and development count vs. occupancy year to make card titles more consistent.
-
-### Changed
 
 ### Fixed
 
