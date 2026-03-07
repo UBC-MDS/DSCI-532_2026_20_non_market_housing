@@ -156,7 +156,6 @@ app_ui = ui.page_navbar(
                 ui.layout_columns(
                     ui.layout_columns(
                         ui.card(
-                            ui.card_header("Clientele Distribution"),
                             output_widget("qc_clientele_bar", width="100%", fill=True),
                         ),
                         ui.download_button(
@@ -166,7 +165,6 @@ app_ui = ui.page_navbar(
                         row_heights=(5, 1),
                     ),
                     ui.card(
-                        ui.card_header("Accessibility"),
                         output_widget("qc_accessibility_pie", width="100%", fill=True),
                     ),
                     col_widths=(6, 6)
