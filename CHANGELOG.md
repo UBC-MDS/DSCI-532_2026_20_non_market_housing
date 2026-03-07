@@ -1,21 +1,22 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [0.3.0]
 
 ### Added
-- Add LLM assistant chat page that can filter data for visuals on the page.
-- Table of data in the assistant page.
-- Download button for filtered data in the assistant page.
-- Tooltip functionality to the line and bar charts in the dashboard.
+
+-   Add LLM assistant chat page that can filter data for visuals on the page.
+-   Table of data in the assistant page.
+-   Download button for filtered data in the assistant page, with clickable URLs.
+-   Tooltip functionality to the line and bar charts in the dashboard.
+-   Added clientele bar chart and accessibility pie chart to the Assistant tab.
 
 ### Changed
-- removed titles from clientele bar chart and development count vs. occupancy year to make card titles more consistent.
 
-### Changed
+-   removed titles from clientele bar chart and development count vs. occupancy year to make card titles more consistent.
 
 ### Fixed
 
@@ -26,18 +27,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [0.2.0]
 
 ### Added
-- Interactive map showing non-market housing developments as point markers.
-- Total count of selected developments based on current filter selections.
-- Accessibility pie chart to summarize accessible/adaptable design-related unit counts for the filtered set of developments.
-- Clientele bar chart to compare unit totals by clientele group (Families, Seniors, Other).
-- Occupancy year line chart to show development counts over time based on first occupancy year.
-- Filters for Local Area, Operator, and Project Status to support interactive exploration across all dashboard components.
+
+-   Interactive map showing non-market housing developments as point markers.
+-   Total count of selected developments based on current filter selections.
+-   Accessibility pie chart to summarize accessible/adaptable design-related unit counts for the filtered set of developments.
+-   Clientele bar chart to compare unit totals by clientele group (Families, Seniors, Other).
+-   Occupancy year line chart to show development counts over time based on first occupancy year.
+-   Filters for Local Area, Operator, and Project Status to support interactive exploration across all dashboard components.
 
 ### Changed
-- Reorganized the layout by moving all filters into a left-side sidebar to make the filtering workflow more consistent and easier to scan.
-- Adjusted layout proportions by using a smaller map footprint to create space for additional charts and summaries without overcrowding the page.
 
-  
+-   Reorganized the layout by moving all filters into a left-side sidebar to make the filtering workflow more consistent and easier to scan.
+-   Adjusted layout proportions by using a smaller map footprint to create space for additional charts and summaries without overcrowding the page.
+
 ## Milestone 2 Reflection
 
 ### Implementation Status

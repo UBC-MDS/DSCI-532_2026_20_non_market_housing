@@ -48,6 +48,20 @@ operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())
 
 dashboard_content = [
     ui.tags.style("""
+    .selectize-input {
+        border-color: #6c757d !important;
+    }
+
+    .shiny-input-checkboxgroup input[type="checkbox"]:not(:checked),
+    .shiny-input-checkbox:not(:checked) {
+        border-color: #6c757d !important;
+    }
+
+    .bslib-value-box,
+    .bslib-value-box .card-body {
+        padding-top: 0 !important;
+    }
+
     .accessibility-card,
     .accessibility-card .card-body,
     .accessibility-card .html-fill-item {
@@ -73,12 +87,19 @@ dashboard_content = [
         height: 100% !important;
     }
     """),
-    ui.layout_columns(
-        ui.layout_columns(
             ui.layout_columns(
-                ui.value_box(
-                title="Total Projects",
-                value=ui.output_text("total_count"),
+                ui.layout_columns(
+                ui.layout_columns(
+                ui.layout_columns(
+                    ui.value_box(
+                        title="Total Projects",
+                        value=ui.output_text("total_count"),
+                    ),
+                    ui.value_box(
+                        title="Total Units",
+                        value=ui.output_text("total_units"),
+                    ),
+                    col_widths=(6, 6),
                 ),
                 ui.card(
                     output_widget("clientele_bar", width="100%", fill=True),
@@ -156,7 +177,7 @@ app_ui = ui.page_navbar(
                 ui.layout_columns(
                     ui.layout_columns(
                         ui.card(
-                            "bar chart"
+                            output_widget("qc_clientele_bar", width="100%", fill=True),
                         ),
                         ui.download_button(
                             "download_view", "⬇ Download filtered view", class_="btn-primary"
@@ -165,7 +186,7 @@ app_ui = ui.page_navbar(
                         row_heights=(5, 1),
                     ),
                     ui.card(
-                        "pie chart"
+                        output_widget("qc_accessibility_pie", width="100%", fill=True),
                     ),
                     col_widths=(6, 6)
                 ),
@@ -196,7 +217,13 @@ def server(input, output, session):
 
     @render.data_frame
     def qc_table():
-        return qc_vals.df()
+        df = qc_vals.df().copy()
+
+        df["URL"] = df["URL"].apply(
+            lambda x: ui.a(x, href=x, target="_blank") if x else ""
+        )
+
+        return df
 
     @reactive.calc
     def filtered_df():
@@ -257,6 +284,15 @@ def server(input, output, session):
     def total_count():
         return str(len(filtered_df()))
 
+    @render.text
+    def total_units():
+        df = filtered_df()
+        unit_cols = ["Adaptable", "Accessible", "Standard"]
+        if all(c in df.columns for c in unit_cols):
+            total = df[unit_cols].fillna(0).astype(float).sum().sum()
+            return f"{int(total):,}"
+        return "0"
+
     @render_altair
     def clientele_bar():
         return make_clientele_bar_chart(filtered_df())
@@ -268,5 +304,15 @@ def server(input, output, session):
     @render.download(filename="non_market_housing_filtered.csv")
     def download_view():
         yield qc_table.data_view().to_csv(index=False)
+
+    @render_altair
+    def qc_clientele_bar():
+        df = qc_vals.df().copy()
+        return make_clientele_bar_chart(df)
+
+    @render_altair(width="100%", height="100%", fill=True)
+    def qc_accessibility_pie():
+        df = qc_vals.df().copy()
+        return create_accessibility_pie_chart(df)
 
 app = App(app_ui, server=server)
