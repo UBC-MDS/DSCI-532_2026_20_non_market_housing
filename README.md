@@ -44,3 +44,15 @@ Run the dashboard using Shiny with the following command:
 ```bash
 shiny run --reload --launch-browser src.app:app
 ```
+
+### Assistant Chat (LLM)
+
+The Assistant tab uses an LLM for conversational help. To enable it:
+
+1. Copy `.env.example` to `.env`
+2. Add your API key for one provider:
+   - **Anthropic (Claude)**: `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/account/keys)
+   - **OpenAI (GPT)**: `OPENAI_API_KEY` from [platform.openai.com](https://platform.openai.com/api-keys)
+   - **Google (Gemini)**: `GOOGLE_API_KEY` from [aistudio.google.com](https://aistudio.google.com/app/apikey)
+   - **GitHub PAT** (free): `GITHUB_TOKEN` from [github.com/settings/tokens](https://github.com/settings/tokens) with the "models" scope. Sign up at [github.com/marketplace/models](https://github.com/marketplace/models) for access.
+3. Restart the app
