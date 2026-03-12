@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from ipyleaflet import Map, Marker, LayerGroup
 from shiny import App, ui, reactive, render
 from shinywidgets import output_widget, render_widget, render_altair
 import pandas as pd
 from shapely import wkt
-from ipywidgets import HTML
+
+from .charts.map_chart import create_vancouver_map
 from dotenv import load_dotenv
 from querychat import init as querychat_init, sidebar as querychat_sidebar, server as querychat_server
 
@@ -261,20 +261,7 @@ def server(input, output, session):
 
     @render_widget
     def map():
-        df = filtered_df()
-        m = Map(center=(49.25, -123.12), zoom=12, scroll_wheel_zoom=True)
-        
-        for _, row in df.dropna(subset=['Geom']).iterrows():
-            geom = row['Geom']
-            marker = Marker(location=(geom.y, geom.x), draggable=False)
-            marker.popup = HTML(f"""
-                <b>{row.get('Name', 'N/A')}</b><br>
-                <b>Address</b>: {row.get('Address', '')}<br>
-                <b>URL</b>: <a href="{row.get('URL', '')}" target="_blank">{row.get('URL', '')}</a>
-            """)
-            m.add_layer(marker)
-        
-        return m
+        return create_vancouver_map(filtered_df())
     
     @render_altair(width="100%", height="100%", fill=True)
     def accessibility_pie_chart():
