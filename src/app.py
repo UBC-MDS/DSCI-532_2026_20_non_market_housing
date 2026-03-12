@@ -86,6 +86,15 @@ dashboard_content = [
         width: 100% !important;
         height: 100% !important;
     }
+
+    /* Keep Plotly map hover tooltip stable when cursor is over it */
+    .map-widget-container .hoverlayer,
+    .map-widget-container .hoverlayer *,
+    .map-widget-container .hoverlayer path,
+    .map-widget-container .hoverlayer .hovertext,
+    .map-widget-container .hoverlayer .hoverlabel {
+        pointer-events: auto !important;
+    }
     """),
             ui.layout_columns(
                 ui.layout_columns(
@@ -127,7 +136,9 @@ dashboard_content = [
             col_widths=(4, 5, 3),
         ),
         ui.layout_columns(
-            ui.card(output_widget("map")),
+            ui.card(
+                ui.div(output_widget("map"), class_="map-widget-container"),
+            ),
             col_widths=(12,),
         ),
         col_widths=(12, 12),
