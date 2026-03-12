@@ -38,7 +38,7 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
         geom = row.geometry
         if geom is None:
             continue
-        # GeoJSON uses [lon, lat]
+
         geom_dict = geom.__geo_interface__
         features.append({
             "type": "Feature",
@@ -62,7 +62,7 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
         go.Choroplethmapbox(
             geojson=geojson,
             locations=boundaries["Name"].tolist(),
-            z=[1] * len(boundaries),  # dummy for coloring
+            z=[1] * len(boundaries),
             featureidkey="properties.name",
             colorscale=[[0, "rgba(100, 149, 237, 0.15)"], [1, "rgba(100, 149, 237, 0.15)"]],
             showscale=False,
