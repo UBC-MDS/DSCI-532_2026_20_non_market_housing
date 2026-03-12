@@ -55,16 +55,31 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
     south = bounds[1] - pad
     north = bounds[3] + pad
 
+    # Build points_df and determine which areas have points (for opacity)
+    points_df = df.dropna(subset=["Geom"]).copy()
+    areas_with_points = (
+        set(points_df["Local Area"].dropna().unique())
+        if not points_df.empty and "Local Area" in points_df.columns
+        else set()
+    )
+    z_values = [
+        1 if row["Name"] in areas_with_points else 0
+        for _, row in boundaries.iterrows()
+    ]
+
     fig = go.Figure()
 
-    # Add boundary outlines (Choroplethmapbox with transparent fill)
+    # Add boundary outlines (Choroplethmapbox; lower opacity for areas with no points)
     fig.add_trace(
         go.Choroplethmapbox(
             geojson=geojson,
             locations=boundaries["Name"].tolist(),
-            z=[1] * len(boundaries),
+            z=z_values,
             featureidkey="properties.name",
-            colorscale=[[0, "rgba(100, 149, 237, 0.15)"], [1, "rgba(100, 149, 237, 0.15)"]],
+            colorscale=[
+                [0, "rgba(100, 149, 237, 0.05)"],  # no points – reduced opacity
+                [1, "rgba(100, 149, 237, 0.15)"],  # has points – full opacity
+            ],
             showscale=False,
             marker_line_width=1.5,
             marker_line_color="rgba(70, 130, 180, 0.8)",
@@ -74,7 +89,6 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
     )
 
     # Add project points
-    points_df = df.dropna(subset=["Geom"]).copy()
     if not points_df.empty:
         points_df["lon"] = points_df["Geom"].apply(lambda g: g.x)
         points_df["lat"] = points_df["Geom"].apply(lambda g: g.y)
