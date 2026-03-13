@@ -10,3 +10,6 @@ ipykernel==7.2.0
 geopandas==1.1.2
 libsass==0.23.0
 shapely==2.1.2
+pytest
+pytest-playwright
+playwright
