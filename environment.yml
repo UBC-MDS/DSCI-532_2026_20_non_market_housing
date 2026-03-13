@@ -17,5 +17,6 @@ dependencies:
   - shapely=2.1.2
   - pip
   - pip:
-      - querychat
-      - python-dotenv>=1.0.0
+    - querychat==0.2.2
+    - python-dotenv>=1.0.0
+    - ibis-framework[duckdb]
