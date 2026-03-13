@@ -56,11 +56,8 @@ status_choices = {
                     "Completed": "Completed"
                 }
 
-# clean_df['Geom'] = clean_df['Geom'].apply(lambda x: wkt.loads(x) if isinstance(x, str) else None)
 
-
-querychat_df = housing.drop("Geom").execute()
-# querychat_df = querychat_df.drop(columns=["Unnamed: 0"])
+querychat_df = housing.drop(["Geom"]).execute()
 project_root = Path(__file__).resolve().parent.parent
 _querychat_client = get_querychat_client()
 qc_params = {
