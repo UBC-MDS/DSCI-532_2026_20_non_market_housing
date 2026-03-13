@@ -22,7 +22,7 @@ def live_server():
     port = 8000
 
     proc = subprocess.Popen(
-        ["shiny", "run", "--host", host, "--port", str(port), "src/app.py"],
+        ["shiny", "run", "--host", host, "--port", str(port), "src.app"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
