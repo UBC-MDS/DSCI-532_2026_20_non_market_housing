@@ -11,6 +11,6 @@ CSV = "data/processed/clean-non-market-housing.csv"
 OUT = "data/processed/clean-non-market-housing.parquet"
 
 duckdb.execute(f"""
-    COPY (SELECT * FROM read_csv_auto('{CSV}'))
+    COPY (SELECT * EXCLUDE ("column00") FROM read_csv_auto('{CSV}'))
     TO '{OUT}' (FORMAT PARQUET)
 """)
