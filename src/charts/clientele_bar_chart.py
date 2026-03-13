@@ -43,7 +43,11 @@ def make_clientele_bar_chart(d: pd.DataFrame) -> alt.Chart:
         .mark_bar()
         .encode(
             x=alt.X("Clientele:N", title=None, axis=alt.Axis(labelAngle=0)),
-            y=alt.Y("Units:Q", title="Total units"),
+            y=alt.Y(
+                "Units:Q", 
+                title="Total units",
+                axis=alt.Axis(format="~f")
+            ),
             color=alt.Color("Clientele:N", scale=alt.Scale(scheme="viridis"), legend=None),
             tooltip=[
                 alt.Tooltip("Clientele:N", title="Clientele"),
