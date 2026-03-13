@@ -137,7 +137,10 @@ dashboard_content = [
         ),
         ui.layout_columns(
             ui.card(
-                ui.div(output_widget("map"), class_="map-widget-container"),
+                ui.div(
+                    output_widget("map"),
+                    class_="map-widget-container",
+                ),
             ),
             col_widths=(12,),
         ),
@@ -221,6 +224,7 @@ app_ui = ui.page_navbar(
 
 def server(input, output, session):
     qc_vals = querychat_server("querychat", querychat_config=qc_config)
+    map_selection = reactive.Value(None)
 
     @render.text
     def qc_title():
@@ -270,21 +274,31 @@ def server(input, output, session):
 
         return filtered[year_mask]
 
+    @reactive.calc
+    def display_df():
+        """Filtered data combined with map lasso selection."""
+        df = filtered_df()
+        selected = map_selection()
+        if selected is not None and len(selected) > 0:
+            return df.loc[df.index.intersection(selected)]
+        return df
+
     @render_widget
     def map():
-        return create_vancouver_map(filtered_df())
+        map_selection.set(None)  # reset selection when filters change
+        return create_vancouver_map(filtered_df(), selection_handler=map_selection)
     
     @render_altair(width="100%", height="100%", fill=True)
     def accessibility_pie_chart():
-        return create_accessibility_pie_chart(filtered_df())
+        return create_accessibility_pie_chart(display_df())
     
     @render.text
     def total_count():
-        return str(len(filtered_df()))
+        return str(len(display_df()))
 
     @render.text
     def total_units():
-        df = filtered_df()
+        df = display_df()
         unit_cols = ["Adaptable", "Accessible", "Standard"]
         if all(c in df.columns for c in unit_cols):
             total = df[unit_cols].fillna(0).astype(float).sum().sum()
@@ -293,11 +307,11 @@ def server(input, output, session):
 
     @render_altair
     def clientele_bar():
-        return make_clientele_bar_chart(filtered_df())
+        return make_clientele_bar_chart(display_df())
 
     @render_altair
     def occupancy_line():
-        return make_occupancy_line_chart(filtered_df())
+        return make_occupancy_line_chart(display_df())
     
     @render.download(filename="non_market_housing_filtered.csv")
     def download_view():
