@@ -7,12 +7,12 @@ from shapely import wkt
 import ibis
 from ibis import _
 
-from .charts.map_chart import create_vancouver_map
 from dotenv import load_dotenv
 from querychat import init as querychat_init, sidebar as querychat_sidebar, server as querychat_server
 
 load_dotenv()
 
+from .charts.map_chart import create_vancouver_map
 from .charts.accessibility_pie import create_accessibility_pie_chart
 from .charts.clientele_bar_chart import make_clientele_bar_chart
 from .charts.occupancy_line_chart import make_occupancy_line_chart
