@@ -41,6 +41,7 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
             rows.append({
                 "Accessibility": accessibility,
                 "Units": units,
+                "Tooltip Units": units,
                 "1BR": br1,
                 "2BR": br2,
                 "3BR": br3,
