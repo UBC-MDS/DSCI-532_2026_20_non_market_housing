@@ -89,7 +89,6 @@ def find_zero_result_area_status_pair(df):
     return None, None
 
 
-@pytest.mark.playwright
 def test_dashboard_default_total_projects_matches_data(page, live_server):
     """This test verifies the default Total Projects value matches the dataset because it confirms the dashboard loads with the correct initial filter state."""
     df = load_data()
@@ -115,7 +114,6 @@ def test_dashboard_default_total_projects_matches_data(page, live_server):
     assert actual == expected
 
 
-@pytest.mark.playwright
 def test_local_area_filter_updates_total_units_correctly(page, live_server):
     """This test verifies aggregation correctness by checking that Total Units updates to the expected sum after filtering by Local Area."""
     df = load_data()
@@ -145,7 +143,6 @@ def test_local_area_filter_updates_total_units_correctly(page, live_server):
     assert actual_units == expected_units
 
 
-@pytest.mark.playwright
 def test_edge_case_filter_combination_can_return_zero_projects(page, live_server):
     """This test verifies an edge-case filter combination can safely return zero projects because the dashboard should handle empty subsets without breaking."""
     df = load_data()
