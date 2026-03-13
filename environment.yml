@@ -18,7 +18,8 @@ dependencies:
   - pytest
   - pip
   - pip:
-      - querychat
-      - python-dotenv>=1.0.0
-      - pytest-playwright
-      - playwright
+    - python-dotenv>=1.0.0
+    - pytest-playwright
+    - playwright
+    - querychat==0.2.2
+    - ibis-framework[duckdb]
