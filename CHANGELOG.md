@@ -4,6 +4,55 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-03-17
+
+### Added
+
+- <!-- New features, components, tests - one line each. Reference PRs where relevant (e.g. #12). -->
+
+### Changed
+
+- <!-- Spec or design deviations, and motivation. -->
+- <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
+- Changed data to lazy loading with parquet + DuckDB as outlined in the milestone.
+
+### Fixed
+
+- <!-- Bugs resolved since M3. -->
+
+- **Feedback prioritization issue link:** #...
+
+### Known Issues
+
+- <!-- Anything incomplete or broken TAs should be aware of (so it isn't mistaken for unfinished work). -->
+
+### Release Highlight: [Name of your advanced feature]
+
+<!-- One short paragraph describing what you built and what it does for the user. -->
+
+- **Option chosen:** A / B / C / D
+- **PR:** #...
+- **Why this option over the others:** <!-- 1–2 sentences; link to your feature prioritization issue -->
+- **Feature prioritization issue link:** #...
+
+### Collaboration
+
+<!-- Summary of workflow or collaboration improvements made since M3. -->
+
+- **CONTRIBUTING.md:** <!-- Link to the PR that updated it with your M3 retrospective and M4 norms. -->
+- **M3 retrospective:** <!-- What changed in your workflow after M3 collaboration feedback. -->
+- **M4:** <!-- What you tried or improved this milestone. -->
+
+### Reflection
+
+<!-- Standard (see General Guidelines): what the dashboard does well, current limitations,
+     any intentional deviations from DSCI 531 visualization best practices. -->
+
+<!-- Trade-offs: one sentence on feedback prioritization - full rationale is in #<issue> and ### Changed above. -->
+
+<!-- Most useful: which lecture, material, or feedback shaped your work most this milestone,
+     and anything you wish had been covered. -->
+
 ## [0.3.0]
 
 ### Added
