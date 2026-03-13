@@ -88,6 +88,16 @@ def find_zero_result_area_status_pair(df):
 
     return None, None
 
+def set_single_status(page, chosen_status):
+    all_statuses = ["Proposed", "Approved", "Under Construction", "Completed"]
+
+    for status in all_statuses:
+        checkbox = page.get_by_label(status, exact=True)
+        if checkbox.is_checked():
+            checkbox.uncheck()
+
+    page.get_by_label(chosen_status, exact=True).check()
+
 
 def test_dashboard_default_total_projects_matches_data(page, live_server):
     """This test verifies the default Total Projects value matches the dataset because it confirms the dashboard loads with the correct initial filter state."""
@@ -157,7 +167,7 @@ def test_edge_case_filter_combination_can_return_zero_projects(page, live_server
     page.wait_for_load_state("networkidle")
 
     choose_single_selectize_option(page, "Local Area", area)
-    check_single_status(page, status)
+    set_single_status(page, status)
     page.wait_for_timeout(1000)
 
     actual_projects = read_kpi_value(page, "Total Projects")
