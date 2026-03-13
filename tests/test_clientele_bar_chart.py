@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+
 import pandas as pd
 
 from src.charts.clientele_bar_chart import prepare_clientele_totals
