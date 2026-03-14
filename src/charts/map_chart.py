@@ -1,15 +1,13 @@
 """
 Plotly map of Vancouver non-market housing with local area boundaries.
+Supports lasso/box selection to filter the displayed data.
 """
 import json
 from pathlib import Path
-
 import geopandas as gpd
 import pandas as pd
 import plotly.graph_objects as go
 from shapely.geometry import shape
-
-
 def _load_boundaries() -> gpd.GeoDataFrame:
     """Load Vancouver local area boundaries from CSV."""
     path = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "local-area-boundary.csv"
@@ -22,7 +20,7 @@ def _load_boundaries() -> gpd.GeoDataFrame:
     return gdf
 
 
-def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
+def create_vancouver_map(df: pd.DataFrame, selection_handler=None):
     """
     Create a Plotly map showing Vancouver local areas and non-market housing projects.
 
@@ -55,16 +53,31 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
     south = bounds[1] - pad
     north = bounds[3] + pad
 
-    fig = go.Figure()
+    # Build points_df and determine which areas have points (for opacity)
+    points_df = df.dropna(subset=["Geom"]).copy()
+    areas_with_points = (
+        set(points_df["Local Area"].dropna().unique())
+        if not points_df.empty and "Local Area" in points_df.columns
+        else set()
+    )
+    z_values = [
+        1 if row["Name"] in areas_with_points else 0
+        for _, row in boundaries.iterrows()
+    ]
 
-    # Add boundary outlines (Choroplethmapbox with transparent fill)
+    fig = go.FigureWidget()
+
+    # Add boundary outlines (Choroplethmapbox; lower opacity for areas with no points)
     fig.add_trace(
         go.Choroplethmapbox(
             geojson=geojson,
             locations=boundaries["Name"].tolist(),
-            z=[1] * len(boundaries),
+            z=z_values,
             featureidkey="properties.name",
-            colorscale=[[0, "rgba(100, 149, 237, 0.15)"], [1, "rgba(100, 149, 237, 0.15)"]],
+            colorscale=[
+                [0, "rgba(100, 149, 237, 0.05)"],  # no points – reduced opacity
+                [1, "rgba(100, 149, 237, 0.15)"],  # has points – full opacity
+            ],
             showscale=False,
             marker_line_width=1.5,
             marker_line_color="rgba(70, 130, 180, 0.8)",
@@ -74,7 +87,6 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
     )
 
     # Add project points
-    points_df = df.dropna(subset=["Geom"]).copy()
     if not points_df.empty:
         points_df["lon"] = points_df["Geom"].apply(lambda g: g.x)
         points_df["lat"] = points_df["Geom"].apply(lambda g: g.y)
@@ -90,19 +102,30 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
             + _url_part(r),
             axis=1,
         )
-        fig.add_trace(
-            go.Scattermapbox(
-                lat=points_df["lat"],
-                lon=points_df["lon"],
-                mode="markers",
-                marker=dict(size=10, color="#e74c3c", symbol="circle", opacity=0.9),
-                text=hover_text,
-                hoverinfo="text",
-                name="Projects",
-            )
+        scatter_trace = go.Scattermapbox(
+            lat=points_df["lat"],
+            lon=points_df["lon"],
+            mode="markers",
+            marker=dict(size=10, color="#e74c3c", symbol="circle", opacity=0.9),
+            text=hover_text,
+            hoverinfo="text",
+            name="Projects",
+            customdata=[[i] for i in points_df.index],
         )
+        fig.add_trace(scatter_trace)
+
+        if selection_handler is not None:
+            def on_selection(trace, points, selector):
+                if points.point_inds:
+                    indices = [trace.customdata[i][0] for i in points.point_inds]
+                    selection_handler.set(indices)
+                else:
+                    selection_handler.set(None)
+
+            fig.data[-1].on_selection(on_selection)
 
     fig.update_layout(
+        dragmode="lasso",
         mapbox=dict(
             style="open-street-map",
             center=dict(lat=(south + north) / 2, lon=(west + east) / 2),
@@ -116,3 +139,4 @@ def create_vancouver_map(df: pd.DataFrame) -> go.Figure:
     )
 
     return fig
+
