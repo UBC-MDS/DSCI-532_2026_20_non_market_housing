@@ -200,6 +200,11 @@ filters_sidebar = ui.sidebar(
         value=[year_min_global, year_max_global],
         sep=""
     ),
+    ui.input_action_button(
+    "reset_filters",
+    "Reset Filters",
+    class_="btn-outline-secondary w-100",
+),
     title="Filters",
     bg="#f8f8f8",
 )
@@ -262,6 +267,36 @@ def server(input, output, session):
         )
 
         return df
+
+    @reactive.effect
+    @reactive.event(input.reset_filters)
+    def _reset_filters():
+        ui.update_selectize(
+            "input_local_area",
+            selected=[],
+            session=session
+        )
+        ui.update_checkbox_group(
+            "input_status",
+            selected=[],
+            session=session
+        )
+        ui.update_selectize(
+            "input_operator",
+            selected=[],
+            session=session
+        )
+        ui.update_checkbox(
+            "input_occupied",
+            value=True,
+            session=session
+        )
+        ui.update_slider(
+            "input_year",
+            value=[year_min_global, year_max_global],
+            session=session
+        )
+        map_selection.set(None)
 
     @reactive.calc
     def filtered_df() -> pd.DataFrame:
