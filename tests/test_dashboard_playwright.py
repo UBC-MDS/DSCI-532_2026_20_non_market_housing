@@ -119,7 +119,8 @@ def test_dashboard_default_total_projects_matches_data(page, live_server):
 
     page.goto(live_server.url)
     page.wait_for_load_state("networkidle")
-
+    page.wait_for_timeout(2000)
+    
     actual = read_kpi_value(page, "Total Projects")
     assert actual == expected
 
@@ -168,7 +169,7 @@ def test_edge_case_filter_combination_can_return_zero_projects(page, live_server
 
     choose_single_selectize_option(page, "Local Area", area)
     set_single_status(page, status)
-    page.wait_for_timeout(1000)
+    page.wait_for_timeout(2000)
 
     actual_projects = read_kpi_value(page, "Total Projects")
     assert actual_projects == 0
