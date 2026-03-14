@@ -2,7 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/).\
+
+## [0.4.0]
+
+### Reflection
+
+-   **Unit test: correct clientele totals are aggregated**
+
+    -   This test checks that the clientele bar chart data is summed correctly for Families, Seniors, and Other. It matters because if the aggregation logic changes, the chart could show wrong totals and give users a misleading summary of the data.
+
+-   **Unit test: missing or non-numeric values are handled safely**
+
+    -   This test checks that blanks, text values, or invalid entries do not break the calculation. It is important because dashboard data is not always perfectly clean, and if this behavior changes, the chart could either crash or display incorrect numbers.
+
+-   **Unit test: missing clientele columns fail safely**
+
+    -   This test checks the fallback case where the expected clientele columns are not present in the input data. It matters because if the data structure changes in the future, the function should still return something safe instead of causing the dashboard to fail.
+
+-   **Playwright test: default dashboard KPI matches the data**
+
+    -   This test checks that the dashboard shows the correct default KPI value when the page first loads. It is important because if the default filtering logic changes, the number shown on the page may no longer match the actual dataset.
+
+-   **Playwright test: local area filter updates total units correctly**
+
+    -   This test checks that selecting a Local Area changes the Total Units value to the correct filtered result. It matters because users depend on the filters to explore the data, and if this breaks, the dashboard summaries would no longer reflect what users selected.
+
+-   **Playwright test: edge-case filter can return zero projects without breaking**
+
+    -   This test checks that the dashboard can handle a valid filter combination that returns no matching rows. It is important because empty subsets are a normal edge case, and if this behavior changes, the app could crash instead of handling zero results properly.
 
 ## [0.4.0] - 2026-03-17
 
