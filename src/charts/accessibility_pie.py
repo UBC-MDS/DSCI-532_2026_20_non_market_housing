@@ -41,6 +41,7 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
             rows.append({
                 "Accessibility": accessibility,
                 "Units": units,
+                "Tooltip Units": units,
                 "1BR": br1,
                 "2BR": br2,
                 "3BR": br3,
@@ -54,6 +55,7 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
         chart_data = pd.DataFrame({
             "Accessibility": ["No data"],
             "Units": [1],
+            "Tooltip Units": [0],
             "1BR": [0], "2BR": [0], "3BR": [0], "4BR": [0], "Studio": [0], "Room": [0],
         })
 
@@ -86,7 +88,7 @@ def create_accessibility_pie_chart(df: pd.DataFrame) -> alt.Chart:
             ),
             tooltip=[
                 alt.Tooltip("Accessibility:N", title="Category"),
-                alt.Tooltip("Units:Q", title="Total number of units", format=","),
+                alt.Tooltip("Tooltip Units:Q", title="Total number of units", format=","),
                 alt.Tooltip("1BR:Q", title="1 Bedroom", format=","),
                 alt.Tooltip("2BR:Q", title="2 Bedroom", format=","),
                 alt.Tooltip("3BR:Q", title="3 Bedroom", format=","),

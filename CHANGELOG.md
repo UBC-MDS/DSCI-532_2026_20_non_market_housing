@@ -46,7 +46,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
-- <!-- Bugs resolved since M3. -->
+- Fixed accessibility pie chart tooltip bug where filtered dataframe with zero entries still displayed "Total Number of Units: 1".
+- Fixed occupancy line chart bug where unnecessary trailing zeros appeared on y-axis when dataframe filtered for zero entries.
+- Fixed clientele bar chart bug where unnecessary trailing zeros appeared on y-axis when dataframe filtered for zero entries.
 
 - **Feedback prioritization issue link:** #...
 
