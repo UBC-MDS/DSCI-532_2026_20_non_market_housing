@@ -15,8 +15,11 @@ dependencies:
   - vl-convert-python=2.0.0
   - libsass=0.23.0
   - shapely=2.1.2
+  - pytest
   - pip
   - pip:
-    - querychat==0.2.2
     - python-dotenv>=1.0.0
+    - pytest-playwright
+    - playwright
+    - querychat==0.2.2
     - ibis-framework[duckdb]
