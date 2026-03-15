@@ -74,14 +74,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **M4:** <!-- What you tried or improved this milestone. -->
 
 ### Reflection
+Our non-market housing dashboard successfully displays important information about current non-market housing developments across Vancouver to planners and policymakers. It has an aesthetic layout displaying important attributes and information at the top of the dashboard and an interactive map at the bottom of the dashboard allowing for further exploration. This layout adheres to both DSCI 531 visualization and DSCI 542 communication best practices as the layout considers the user's tendency to read information from left to right and top to bottom. This allows for an easy-to-understand flow of information as the user reads it starting with summary statistics (like total development and unit count) in the top left, moving to descriptive plots in the tope right, and finally the map at the bottom. Furthermore, the filtering of the dashboard is quite intuitive. Combined with the above points, this provides an easy and accessible experience for the user. A current limitation of the dashboard includes a lack of guidance for the user, as while the dashboard is quite intuitive to use, it would be beneficial to have a "help" button that could describe some of its features if a user gets lost.
 
-<!-- Standard (see General Guidelines): what the dashboard does well, current limitations,
-     any intentional deviations from DSCI 531 visualization best practices. -->
+We aimed to categorize feedback concerning actual bugs (incorrect map rendering, incorrect information displayed in the tooltips, etc.) as critical, and those concerning general cosmetic changes as non-critical. These prioritizations are detailed in issue 107. 
 
-<!-- Trade-offs: one sentence on feedback prioritization - full rationale is in #<issue> and ### Changed above. -->
-
-<!-- Most useful: which lecture, material, or feedback shaped your work most this milestone,
-     and anything you wish had been covered. -->
+In general, all the feedback was very helpful in informing our work on this milestone. Each piece of feedback from both peers and instructors provided us with features to add or improve that we would not have thought of otherwise. Getting new eyes on the dashboard was very useful. Furthermore, lectures 7 and 8 of this course were incredibly important in helping us implement both Parquet + DuckDB and our testing modules respectively. 
 
 ## [0.3.0]
 
