@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - python=3.13
+  - pyarrow=23.0.1
   - shiny=1.4
   - shinywidgets=0.7.1
   - anywidget
@@ -18,8 +19,8 @@ dependencies:
   - pytest
   - pip
   - pip:
-    - python-dotenv>=1.0.0
-    - pytest-playwright
-    - playwright
-    - querychat==0.2.2
-    - ibis-framework[duckdb]
+      - python-dotenv>=1.0.0
+      - pytest-playwright
+      - playwright
+      - querychat==0.2.2
+      - ibis-framework[duckdb]
