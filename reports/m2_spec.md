@@ -17,9 +17,11 @@
 | `input_status` | Input | `ui.input_checkbox_group` | \- | 1, 2, 3 |
 | `input_occupied` | Input | `ui.input_checkbox` | \- | 1, 2, 3 |
 | `input_year` | Input | `ui.input_slider` | \- | 1, 2, 3 |
-| `filtered_df` | Reactive Calc | `@reactive.calc` | `input_local_area`, `input_operator`, `input_project_status`, `input_year` | 1, 2, 3 |
+| `reset_filters` | Input | `ui.input_action_button` | \- | \- |
+| `filtered_df` | Reactive Calc | `@reactive.calc` | `input_local_area`, `input_operator`, `input_status`, `input_year`, `input_occupied` | 1, 2, 3 |
 | `filtered_map` | Output | `@render_widget` | `filtered_df` | 1 |
 | `count_total_filtered` | Output | `ui.value_box` | `filtered_df` | 1 |
+| `count_total_units` | Output | `ui.value_box` | `filtered_df` | \- |
 | `clientele_bar_chart` | Output | `@render_widget` | `filtered_df` | 3 |
 | `occupancy_year_line_chart` | Output | `@render_widget` | `filtered_df` | 2 |
 | `design_pie_chart` | Output | `@render_widget` | `filtered_df` | 3 |
@@ -38,6 +40,7 @@ flowchart TD
   F --> BC([clientele_bar_chart])
   F --> LC([occupancy_year_line_chart])
   F --> CV([count_total_filtered])
+  F --> CU([count_total_units])
   F --> DS([design_pie_chart])
 ```
 
