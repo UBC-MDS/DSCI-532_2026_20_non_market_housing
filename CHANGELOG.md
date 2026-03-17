@@ -9,41 +9,47 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - <!-- New features, components, tests - one line each. Reference PRs where relevant (e.g. #12). -->
+- Added reset filters button (#125)
+- Show neighbourhood polygons on the map (#113)
+- Added filtering based on map lasso selection (#113)
+- Add tests verifying logic of the dashboard (#117)
 
 ### Changed
 
 - <!-- Spec or design deviations, and motivation. -->
 - <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
-- Changed data to lazy loading with parquet + DuckDB as outlined in the milestone.
+- Changed data to lazy loading with parquet + DuckDB as outlined in the milestone (#104 via #120)
 
 ### Fixed
 
-- Fixed accessibility pie chart tooltip bug where filtered dataframe with zero entries still displayed "Total Number of Units: 1".
-- Fixed occupancy line chart bug where unnecessary trailing zeros appeared on y-axis when dataframe filtered for zero entries.
-- Fixed clientele bar chart bug where unnecessary trailing zeros appeared on y-axis when dataframe filtered for zero entries.
+- Fixed accessibility pie chart tooltip bug where filtered dataframe with zero entries still displayed "Total Number of Units: 1" (#112 via #124).
+- Fixed occupancy line chart bug where unnecessary trailing zeros appeared on y-axis when dataframe filtered for zero entries (#112 via #124).
+- Fixed clientele bar chart bug where unnecessary trailing zeros appeared on y-axis when dataframe filtered for zero entries (#112 via #124). 
+- Fix the querychat error message appearing on use (#119, #111, via #120)
+- Fix points not rendering properly on the map (#115 via #113)
 
-- **Feedback prioritization issue link:** #...
+- **Feedback prioritization issue link:** https://github.com/UBC-MDS/DSCI-532_2026_20_non_market_housing/issues/107
 
 ### Known Issues
 
 - <!-- Anything incomplete or broken TAs should be aware of (so it isn't mistaken for unfinished work). -->
 
-### Release Highlight: [Name of your advanced feature]
+### Release Highlight: Map Lasso Selection Feature
 
-<!-- One short paragraph describing what you built and what it does for the user. -->
+The dashboard was updated so that if the lasso tool was used to select a portion of the map, other outputs would be filtered according to the selection. This allows the user to create custom selections of areas of the map and view information about the area, rather than only being limited to local area in terms of spatial filtering.
 
-- **Option chosen:** A / B / C / D
-- **PR:** #...
-- **Why this option over the others:** <!-- 1–2 sentences; link to your feature prioritization issue -->
-- **Feature prioritization issue link:** #...
+- **Option chosen:** D
+- **PR:** #113
+- **Why this option over the others:** As discussed in the issue, the map is central to the workflow and making it interactive as an input lets users drill down spatially and see how the rest of the dashboard updates.
+- **Feature prioritization issue link:** https://github.com/UBC-MDS/DSCI-532_2026_20_non_market_housing/issues/105
 
 ### Collaboration
 
 <!-- Summary of workflow or collaboration improvements made since M3. -->
 
-- **CONTRIBUTING.md:** <!-- Link to the PR that updated it with your M3 retrospective and M4 norms. -->
-- **M3 retrospective:** <!-- What changed in your workflow after M3 collaboration feedback. -->
-- **M4:** <!-- What you tried or improved this milestone. -->
+- **CONTRIBUTING.md:** https://github.com/UBC-MDS/DSCI-532_2026_20_non_market_housing/pull/127
+- **M3 retrospective:** More efforts to limit the scope of our PRs.
+- **M4:** We tried limiting the scope of our PRs by creating separate pull requests, though in some cases there was overlap that made it difficult to fully separate (for example, changing the type of our map along with other map updates).
 
 ### Reflection
 Our non-market housing dashboard successfully displays important information about current non-market housing developments across Vancouver to planners and policymakers. It has an aesthetic layout displaying important attributes and information at the top of the dashboard and an interactive map at the bottom of the dashboard allowing for further exploration. This layout adheres to both DSCI 531 visualization and DSCI 542 communication best practices as the layout considers the user's tendency to read information from left to right and top to bottom. This allows for an easy-to-understand flow of information as the user reads it starting with summary statistics (like total development and unit count) in the top left, moving to descriptive plots in the tope right, and finally the map at the bottom. Furthermore, the filtering of the dashboard is quite intuitive. Combined with the above points, this provides an easy and accessible experience for the user. A current limitation of the dashboard includes a lack of guidance for the user, as while the dashboard is quite intuitive to use, it would be beneficial to have a "help" button that could describe some of its features if a user gets lost.
