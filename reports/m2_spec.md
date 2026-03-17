@@ -117,3 +117,11 @@ Option D: Component click event interaction was chosen for the advanced feature 
 
 ## Addressed Feedback
 
+The following feedback points were addressed and updated accordingly in the specifications (where necessary):
+
+- Added reset filters button (issues #115, #119, PR #125)
+- Fix the querychat error message (issues #119, #111, PR #120)
+- Fix points not rendering properly on the map (issue #115, PR #113)
+- Show neighbourhood polygons on the map (issue #115, PR #113)
+- Fix inconsistent unit count between summary cards and pie chart tooltip (issue #112, PR #124)
+- Remove unnecessary trailing zeros in y-axis labels of charts when data is zero (issue #112, PR #124)
