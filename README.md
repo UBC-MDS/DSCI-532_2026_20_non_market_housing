@@ -62,18 +62,25 @@ The Assistant tab uses an LLM for conversational help. To enable it:
 Before running the tests, make sure the project environment is installed and activated.
 
 Install Playwright browsers:
+
 ```bash
 playwright install
 ```
+
 Run all tests:
+
 ```bash
 pytest
 ```
+
 Run only the unit tests:
+
 ```bash
 pytest tests/test_clientele_bar_chart.py
 ```
+
 Run only the Playwright dashboard tests:
+
 ```bash
 pytest tests/test_dashboard_playwright.py
 ```
