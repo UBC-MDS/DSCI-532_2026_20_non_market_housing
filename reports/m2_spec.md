@@ -101,10 +101,19 @@ It is consumed by the following outputs:
 
 -   `filtered_map`
 
-It is also consumed by the `@reactive.calc` `display_df`, which filters the dataframe if the lasso tool is active. This, in turn, is consumed by the following outputs:
+### `display_df`
+
+`filtered_df` is consumed by the `@reactive.calc` `display_df`, which filters the dataframe if the lasso tool is active. This, in turn, is consumed by the following outputs:
 
 -   `clientele_bar_chart`
 -   `occupancy_year_line_chart`
 -   `count_total_filtered`
 - `count_total_units`
 -   `design_pie_chart`
+
+## Advanced Feature Inclusion
+
+Option D: Component click event interaction was chosen for the advanced feature in Milestone 4. In particular, the dashboard was updated so that if the lasso tool was used to select a portion of the map, other outputs would be filtered according to the selection. This was implemented by adding `@reactive.calc` `display_df`, with the specification updated accordingly above.
+
+## Addressed Feedback
+
