@@ -62,18 +62,37 @@ The Assistant tab uses an LLM for conversational help. To enable it:
 Before running the tests, make sure the project environment is installed and activated.
 
 Install Playwright browsers:
+
 ```bash
 playwright install
 ```
+
 Run all tests:
+
 ```bash
 pytest
 ```
+
 Run only the unit tests:
+
 ```bash
 pytest tests/test_clientele_bar_chart.py
 ```
+
 Run only the Playwright dashboard tests:
+
 ```bash
 pytest tests/test_dashboard_playwright.py
 ```
+
+### Assistant Chat (LLM)
+
+The Assistant tab uses an LLM for conversational help. To enable it:
+
+1. Copy `.env.example` to `.env`
+2. Add your API key for one provider:
+   - **Anthropic (Claude)**: `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/account/keys)
+   - **OpenAI (GPT)**: `OPENAI_API_KEY` from [platform.openai.com](https://platform.openai.com/api-keys)
+   - **Google (Gemini)**: `GOOGLE_API_KEY` from [aistudio.google.com](https://aistudio.google.com/app/apikey)
+   - **GitHub PAT** (free): `GITHUB_TOKEN` from [github.com/settings/tokens](https://github.com/settings/tokens) with the "models" scope. Sign up at [github.com/marketplace/models](https://github.com/marketplace/models) for access.
+3. Restart the app

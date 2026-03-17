@@ -157,7 +157,43 @@ dashboard_content = [
                     class_="accessibility-chart-wrap",
                 ),
                 class_="accessibility-card",
+                ui.layout_columns(
+                ui.layout_columns(
+                ui.layout_columns(
+                    ui.value_box(
+                        title="Total Projects",
+                        value=ui.output_text("total_count"),
+                    ),
+                    ui.value_box(
+                        title="Total Units",
+                        value=ui.output_text("total_units"),
+                    ),
+                    col_widths=(6, 6),
+                ),
+                ui.card(
+                    output_widget("clientele_bar", width="100%", fill=True),
+                    style="overflow: hidden;",
+                ),
+                col_widths=(12, 12),
+                row_heights=(0.7, 2.7),
             ),
+            ui.card(
+                output_widget("occupancy_line", width="100%", fill=True),
+                style="overflow: hidden;"
+            ),
+            ui.card(
+                ui.div(
+                    output_widget(
+                        "accessibility_pie_chart",
+                        width="100%",
+                        height="100%",
+                        fill=True,
+                    ),
+                    class_="accessibility-chart-wrap",
+                ),
+                class_="accessibility-card",
+            ),
+            col_widths=(4, 5, 3),
             col_widths=(4, 5, 3),
         ),
         ui.layout_columns(
@@ -246,6 +282,7 @@ app_ui = ui.page_navbar(
     ),
     title="Non-Market Housing",
     fillable=True,
+    theme=ui.Theme("lux"),
     theme=ui.Theme("lux"),
 )
 
