@@ -3,10 +3,16 @@ shinywidgets==0.7.1
 querychat
 python-dotenv>=1.0.0
 anywidget
-ipyleaflet==0.20
 pandas==3.0.0
 altair==6.0.0
+plotly==6.5.0
 ipykernel==7.2.0
 geopandas==1.1.2
 libsass==0.23.0
 shapely==2.1.2
+pytest
+pytest-playwright
+playwright
+ibis-framework==12.0.0
+pyarrow==23.0.1
+pyarrow_hotfix==0.7

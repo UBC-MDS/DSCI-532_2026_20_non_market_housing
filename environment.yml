@@ -4,10 +4,11 @@ channels:
   - defaults
 dependencies:
   - python=3.13
+  - pyarrow=23.0.1
   - shiny=1.4
   - shinywidgets=0.7.1
   - anywidget
-  - ipyleaflet=0.20
+  - plotly==6.5.0
   - pandas=3.0.0
   - altair=6.0.0
   - ipykernel=7.2.0
@@ -15,7 +16,12 @@ dependencies:
   - vl-convert-python=2.0.0
   - libsass=0.23.0
   - shapely=2.1.2
+  - pytest
   - pip
   - pip:
-    - querychat<0.3
-    - python-dotenv>=1.0.0
+      - python-dotenv>=1.0.0
+      - pytest-playwright
+      - playwright
+      - querychat==0.2.2
+      - ibis-framework[duckdb]
+      - pyarrow_hotfix==0.7

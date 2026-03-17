@@ -1,31 +1,63 @@
 from pathlib import Path
 
-from ipyleaflet import Map, Marker, LayerGroup
 from shiny import App, ui, reactive, render
 from shinywidgets import output_widget, render_widget, render_altair
 import pandas as pd
 from shapely import wkt
-from ipywidgets import HTML
+import ibis
+from ibis import _
+
 from dotenv import load_dotenv
 from querychat import init as querychat_init, sidebar as querychat_sidebar, server as querychat_server
 
 load_dotenv()
 
+from .charts.map_chart import create_vancouver_map
 from .charts.accessibility_pie import create_accessibility_pie_chart
 from .charts.clientele_bar_chart import make_clientele_bar_chart
 from .charts.occupancy_line_chart import make_occupancy_line_chart
 from .llm_client import get_querychat_client
 
-clean_df = pd.read_csv(
-    "data/processed/clean-non-market-housing.csv",
-    dtype={"Occupancy Year": "Int64"}
+con = ibis.duckdb.connect()
+PARQUET = "data/processed/clean-non-market-housing.parquet"
+housing = con.read_parquet(str(PARQUET))
+
+local_area_choices: list[str] = sorted(
+    housing.select("Local Area")
+    .distinct()
+    .execute()["Local Area"]
+    .dropna()
+    .tolist()
+)
+
+year_stats = (
+    housing.select(
+        min_year=housing["Occupancy Year"].min(),
+        max_year=housing["Occupancy Year"].max(),
     )
+    .execute()
+    .iloc[0]
+)
+year_min_global = int(year_stats["min_year"])
+year_max_global = int(year_stats["max_year"])
 
-clean_df['Geom'] = clean_df['Geom'].apply(lambda x: wkt.loads(x) if isinstance(x, str) else None)
+operator_choices: list[str] = sorted(
+    housing.select("Operator")
+    .distinct()
+    .execute()["Operator"]
+    .dropna()
+    .tolist()
+)
+
+status_choices = {
+                    "Proposed": "Proposed",
+                    "Approved": "Approved",
+                    "Under Construction": "Under Construction",
+                    "Completed": "Completed"
+                }
 
 
-querychat_df = clean_df.drop(columns=["Geom"]).copy()
-querychat_df = querychat_df.drop(columns=["Unnamed: 0"])
+querychat_df = housing.drop(["Geom"]).execute()
 project_root = Path(__file__).resolve().parent.parent
 _querychat_client = get_querychat_client()
 qc_params = {
@@ -36,15 +68,8 @@ if _querychat_client is not None:
     qc_params["client"] = _querychat_client
 qc_config = querychat_init(querychat_df, "non_market_housing", **qc_params)
 
-local_areas = sorted(clean_df["Local Area"].unique().tolist())
 
-status_choices = {
-                    "Proposed": "Proposed",
-                    "Approved": "Approved",
-                    "Under Construction": "Under Construction",
-                    "Completed": "Completed"
-                }
-operator_choices = {v: v for v in sorted(clean_df["Operator"].dropna().unique())}
+
 
 dashboard_content = [
     ui.tags.style("""
@@ -85,6 +110,15 @@ dashboard_content = [
     #accessibility_pie_chart .vega-embed {
         width: 100% !important;
         height: 100% !important;
+    }
+
+    /* Keep Plotly map hover tooltip stable when cursor is over it */
+    .map-widget-container .hoverlayer,
+    .map-widget-container .hoverlayer *,
+    .map-widget-container .hoverlayer path,
+    .map-widget-container .hoverlayer .hovertext,
+    .map-widget-container .hoverlayer .hoverlabel {
+        pointer-events: auto !important;
     }
     """),
             ui.layout_columns(
@@ -127,7 +161,12 @@ dashboard_content = [
             col_widths=(4, 5, 3),
         ),
         ui.layout_columns(
-            ui.card(output_widget("map")),
+            ui.card(
+                ui.div(
+                    output_widget("map"),
+                    class_="map-widget-container",
+                ),
+            ),
             col_widths=(12,),
         ),
         col_widths=(12, 12),
@@ -139,7 +178,7 @@ filters_sidebar = ui.sidebar(
     ui.input_selectize(
         id="input_local_area",
         label="Local Area",
-        choices=local_areas,
+        choices=local_area_choices,
         multiple=True,
     ),
     ui.input_checkbox_group(
@@ -156,13 +195,16 @@ filters_sidebar = ui.sidebar(
     ),
     ui.input_checkbox("input_occupied", "Include Unoccupied Projects", True),
     ui.input_slider(
-            id="input_year",
-            label="Occupancy Year",
-            min=clean_df["Occupancy Year"].min(),
-            max=clean_df["Occupancy Year"].max(),
-            value=[clean_df["Occupancy Year"].min(), clean_df["Occupancy Year"].max()],
-            sep=""
-        ),
+        "input_year", "Occupancy Year",
+        min=year_min_global, max=year_max_global,
+        value=[year_min_global, year_max_global],
+        sep=""
+    ),
+    ui.input_action_button(
+    "reset_filters",
+    "Reset Filters",
+    class_="btn-outline-secondary w-100",
+),
     title="Filters",
     bg="#f8f8f8",
 )
@@ -210,6 +252,7 @@ app_ui = ui.page_navbar(
 
 def server(input, output, session):
     qc_vals = querychat_server("querychat", querychat_config=qc_config)
+    map_selection = reactive.Value(None)
 
     @render.text
     def qc_title():
@@ -225,68 +268,92 @@ def server(input, output, session):
 
         return df
 
-    @reactive.calc
-    def filtered_df():
-        local_area = input.input_local_area()
-        operator = input.input_operator()
-        include_unoccupied = input.input_occupied()
-        year_min, year_max = input.input_year()
-        status = input.input_status()
-
-        if not local_area:
-            local_area = local_areas
-        if not status:
-            status = list(status_choices.keys())
-        if not operator:
-            operator = list(operator_choices.keys())
-
-        filtered = clean_df.copy().query(
-            "`Local Area` in @local_area & "
-            "`Operator` in @operator & "
-            "`Project Status` in @status"
+    @reactive.effect
+    @reactive.event(input.reset_filters)
+    def _reset_filters():
+        ui.update_selectize(
+            "input_local_area",
+            selected=[],
+            session=session
         )
+        ui.update_checkbox_group(
+            "input_status",
+            selected=[],
+            session=session
+        )
+        ui.update_selectize(
+            "input_operator",
+            selected=[],
+            session=session
+        )
+        ui.update_checkbox(
+            "input_occupied",
+            value=True,
+            session=session
+        )
+        ui.update_slider(
+            "input_year",
+            value=[year_min_global, year_max_global],
+            session=session
+        )
+        map_selection.set(None)
 
-        if include_unoccupied:
-            year_mask = (
-                filtered["Occupancy Year"].isna() |
-                (filtered["Occupancy Year"].between(
-                    year_min, year_max, inclusive="both"))
-            )
+    @reactive.calc
+    def filtered_df() -> pd.DataFrame:
+        local_area = list(input.input_local_area()) or local_area_choices
+        operator = list(input.input_operator()) or operator_choices
+        status = list(input.input_status()) or list(status_choices.keys())
+        include_unocc = input.input_occupied()
+        year_min, year_max = input.input_year()
+
+        expr = housing
+
+        expr = expr.filter(expr["Local Area"].isin(local_area))
+        expr = expr.filter(expr["Operator"].isin(operator))
+        expr = expr.filter(expr["Project Status"].isin(status))
+
+        year_col = expr["Occupancy Year"]
+        in_range = year_col.between(year_min, year_max)
+
+        if include_unocc:
+            expr = expr.filter(year_col.isnull() | in_range)
         else:
-            year_mask = filtered["Occupancy Year"].between(
-                year_min, year_max, inclusive="both"
+            expr = expr.filter(in_range)
+
+        df = expr.execute()
+
+        if "Geom" in df.columns:
+            df["Geom"] = df["Geom"].apply(
+                lambda x: wkt.loads(x) if isinstance(x, str) else None
             )
 
-        return filtered[year_mask]
+        return df
+
+    @reactive.calc
+    def display_df():
+        """Filtered data combined with map lasso selection."""
+        df = filtered_df()
+        selected = map_selection()
+        if selected is not None and len(selected) > 0:
+            return df.loc[df.index.intersection(selected)]
+        return df
 
     @render_widget
     def map():
-        df = filtered_df()
-        m = Map(center=(49.25, -123.12), zoom=12, scroll_wheel_zoom=True)
-        
-        for _, row in df.dropna(subset=['Geom']).iterrows():
-            geom = row['Geom']
-            marker = Marker(location=(geom.y, geom.x), draggable=False)
-            marker.popup = HTML(f"""
-                <b>{row.get('Name', 'N/A')}</b><br>
-                <b>Address</b>: {row.get('Address', '')}<br>
-                <b>URL</b>: <a href="{row.get('URL', '')}" target="_blank">{row.get('URL', '')}</a>
-            """)
-            m.add_layer(marker)
-        
-        return m
+        map_selection.set(None)  # reset selection when filters change
+        return create_vancouver_map(filtered_df(), selection_handler=map_selection)
     
     @render_altair(width="100%", height="100%", fill=True)
     def accessibility_pie_chart():
-        return create_accessibility_pie_chart(filtered_df())
+        return create_accessibility_pie_chart(display_df())
     
     @render.text
     def total_count():
-        return str(len(filtered_df()))
+        return str(len(display_df()))
 
     @render.text
     def total_units():
-        df = filtered_df()
+        df = display_df()
         unit_cols = ["Adaptable", "Accessible", "Standard"]
         if all(c in df.columns for c in unit_cols):
             total = df[unit_cols].fillna(0).astype(float).sum().sum()
@@ -295,11 +362,11 @@ def server(input, output, session):
 
     @render_altair
     def clientele_bar():
-        return make_clientele_bar_chart(filtered_df())
+        return make_clientele_bar_chart(display_df())
 
     @render_altair
     def occupancy_line():
-        return make_occupancy_line_chart(filtered_df())
+        return make_occupancy_line_chart(display_df())
     
     @render.download(filename="non_market_housing_filtered.csv")
     def download_view():
