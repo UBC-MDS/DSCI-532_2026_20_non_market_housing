@@ -8,7 +8,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- <!-- New features, components, tests - one line each. Reference PRs where relevant (e.g. #12). -->
 - Added reset filters button (#125)
 - Show neighbourhood polygons on the map (#113)
 - Added filtering based on map lasso selection (#113)
@@ -16,8 +15,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- <!-- Spec or design deviations, and motivation. -->
-- <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
 - Changed data to lazy loading with parquet + DuckDB as outlined in the milestone (#104 via #120)
 
 ### Fixed
@@ -32,14 +29,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Known Issues
 
-- <!-- Anything incomplete or broken TAs should be aware of (so it isn't mistaken for unfinished work). -->
 
 ### Release Highlight: Map Lasso Selection Feature
 
 The dashboard was updated so that if the lasso tool was used to select a portion of the map, other outputs would be filtered according to the selection. This allows the user to create custom selections of areas of the map and view information about the area, rather than only being limited to local area in terms of spatial filtering.
 
 - **Option chosen:** D
-- **PR:** #113
+- **PR:** https://github.com/UBC-MDS/DSCI-532_2026_20_non_market_housing/pull/113
 - **Why this option over the others:** As discussed in the issue, the map is central to the workflow and making it interactive as an input lets users drill down spatially and see how the rest of the dashboard updates.
 - **Feature prioritization issue link:** https://github.com/UBC-MDS/DSCI-532_2026_20_non_market_housing/issues/105
 
