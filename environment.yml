@@ -24,3 +24,4 @@ dependencies:
       - playwright
       - querychat==0.2.2
       - ibis-framework[duckdb]
+      - pyarrow_hotfix==0.7
